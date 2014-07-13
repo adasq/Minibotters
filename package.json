@@ -11,6 +11,8 @@
     "request": "2.37.0",    
     "tough-cookie": "latest",
     "underscore": "latest",
+    "node-codein" : "",
+    "cheerio": "",
     "q": "1.0.1"
   }, 
   "author": "",
