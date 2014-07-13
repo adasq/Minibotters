@@ -1,0 +1,18 @@
+{
+  "name": "Minibotters",
+  "version": "0.0.0",
+  "description": "Minitroopers Bot API. Based on nodejs",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+    "devDependencies": {
+    "http-server": "^0.6.1",
+    "request": "2.37.0",    
+    "tough-cookie": "latest",
+    "underscore": "latest",
+    "q": "1.0.1"
+  }, 
+  "author": "",
+  "license": "ISC"
+}
