@@ -9,6 +9,7 @@ module.exports =  {
 		},
 		raid: {
 			"174": "You have passed Raid!",
+			"-174": "You have passed Raid!",
 			"142": "you have failed raid"
 		},
 		auth: {

@@ -15,6 +15,13 @@ module.exports = function(){
 			});
 			return defer.promise;
 	};
+	this.get = function(url){
+			var defer= q.defer(); 	
+			request({uri: url, jar: j, followRedirect: true}, function(e,r,b){				
+				defer.resolve(b);
+			});
+			return defer.promise;
+	};
 	this.post = function(url, data){
 			var defer= q.defer(); 			
 			request.post({form: data, uri: url, jar: j, followRedirect: false}, function(e,r,b){		 

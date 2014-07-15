@@ -7,7 +7,7 @@ this.getTrooperInfo = function(b){
 var $ = cheerio.load(b, {normalizeWhitespace: true});
 
 var money = $('.money').text().trim();
-var needToUpgrade = $("a[class='but_bg b3_bg img']").text().trim()
+var needToUpgrade = $("a[class='but_bg b3_bg img']").text().trim();
 
 var items = $('li.on');
 var skills = [];

@@ -10,9 +10,22 @@ var PageParser =  require('./libmb/PageParser');
 var Trooper =  require('./libmb/Trooper'); 
 
 
+var fs = require('fs');
+
+
+var writeToFile = function(b){
+fs.writeFile("./test.html", b, function(err) {
+    if(err) {
+        console.log(err);
+    } else {
+        console.log("The file was saved!");
+    }
+}); 
+};
+
 var trooper = new Trooper({
 	domain: "com",
-	name: "ziemniaki7",
+	name: "ziemniaki4",
 	opponent: "niekoxaj"
 //	name: "exampletrooper",
 //	pass: "examplePassword" 
@@ -20,14 +33,17 @@ var trooper = new Trooper({
 
 var promise = trooper.auth();
 promise.then(function(result){	
-console.log(result.code, result.message);
+console.log("auth:", result.code, result.message);
+ trooper.urlManager.getMainTrooperUrl()
+var promise = trooper.req.get("http://ziemniaki4.minitroopers.com/");
+promise.then(function(r){	
+	writeToFile(r);
+});
 
-
-	// var promise= trooper.makeMissions();
- // 	promise.then(function(resp){
-	//   console.log("makeMissions ",resp);	  
-	// });
-
+// 	var promise= trooper.makeMissions();
+//  	promise.then(function(resp){
+// 	  console.log("makeMissions ",resp);	  
+// 	});
 
 
 // var promise= trooper.makeBattles();
@@ -36,9 +52,9 @@ console.log(result.code, result.message);
 // 	});
 
 
-var promise= trooper.makeRaids();
- 	promise.then(function(resp){
-	  console.log("makeRaids", resp);	  
-	});
+// var promise= trooper.makeRaids();
+//  	promise.then(function(resp){
+// 	  console.log("makeRaids", resp);	  
+// });
 
- });
+});
