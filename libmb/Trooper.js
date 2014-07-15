@@ -52,7 +52,44 @@ return defer.promise;
 };
 
 
+Trooper.prototype.makeBattle = function(opponent){
+		var that= this, defer= q.defer(); 
+		var data = {
+			chk: that.chk,
+			friend: opponent || that.config.opponent,
+		};
+		var promise= this.req.post(this.urlManager.getBattleUrl(), data);
+		promise.then(function(response){		
+			var cookies= response.getCookies();			
+			if(cookies){
+				var msg = CookieManager.getMessageByCookie(cookies);
+				defer.resolve(msg);
+			}else{
+				defer.resolve(-1);
+			}
+		}, function(){ 
+			console.log("not catched err")
+		});
+		return defer.promise;	
+};
 
+Trooper.prototype.makeRaid = function(){
+		var defer= q.defer(); 	
+		var promise= this.req.send(this.urlManager.getRaidUrl(this.chk));
+		promise.then(function(response){		
+			var cookies= response.getCookies();			 
+			if(cookies){
+				var msg = CookieManager.getMessageByCookie(cookies);
+				defer.resolve(msg);
+			}else{
+				defer.resolve(-1);
+			}
+		}, function(){ 
+			console.log("not catched err")
+		});
+		return defer.promise;
+};
+ 
 
 
 Trooper.prototype.makeMission = function(){
@@ -72,6 +109,30 @@ Trooper.prototype.makeMission = function(){
 		return defer.promise;
 };
 
+Trooper.prototype.makeRaids= function(){	 
+		var totalDone = 0, that= this, defer= q.defer(); 	
+		var makeRaid = function(){
+			that.makeRaid().then(function(result){
+				if(result == 142){
+					defer.resolve(totalDone);
+				}else{
+					totalDone++;
+					makeRaid();
+				}
+			});
+		};
+		makeRaid();
+		return defer.promise;
+};
+
+Trooper.prototype.makeBattles= function(){
+		var promise= q.all([
+		this.makeBattle(),
+		this.makeBattle(),
+		this.makeBattle()
+		]);
+		return promise;
+};
 
 
 Trooper.prototype.makeMissions= function(){

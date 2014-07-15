@@ -10,23 +10,35 @@ var PageParser =  require('./libmb/PageParser');
 var Trooper =  require('./libmb/Trooper'); 
 
 
-
-
 var trooper = new Trooper({
 	domain: "com",
-	name: "ziemniaki5"
+	name: "ziemniaki7",
+	opponent: "niekoxaj"
 //	name: "exampletrooper",
 //	pass: "examplePassword" 
 });
 
 var promise = trooper.auth();
-
-promise.then(function(result){
-	
+promise.then(function(result){	
 console.log(result.code, result.message);
 
-	var promise= trooper.makeMissions();
+
+	// var promise= trooper.makeMissions();
+ // 	promise.then(function(resp){
+	//   console.log("makeMissions ",resp);	  
+	// });
+
+
+
+// var promise= trooper.makeBattles();
+//  	promise.then(function(resp){
+// 	  console.log("makeBattles", resp);	  
+// 	});
+
+
+var promise= trooper.makeRaids();
  	promise.then(function(resp){
-	  console.log("makeMissions ",resp);	  
+	  console.log("makeRaids", resp);	  
 	});
+
  });

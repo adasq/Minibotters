@@ -1,9 +1,11 @@
 module.exports = function(config){
 
 
+
 	var domain = config.domain;
 	var name = config.name;
 	var baseUrl = "http://"+name+".minitroopers."+domain+"/";
+
 
 
 	this.getBaseUrl= function(){
@@ -12,13 +14,6 @@ module.exports = function(config){
 	this.getMissionUrl= function(chk){
 		return baseUrl+"b/mission?chk="+chk;
 	};
-		this.getRaidUrl= function(chk){
-		return baseUrl+"b/raid?chk="+chk;
-	};
-	this.getBattleUrl= function(){
-		return baseUrl+"b/battle";
-	};
-
 	this.getMainTrooperUrl= function(){
 		return baseUrl+"t/0";
 	};
