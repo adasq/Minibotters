@@ -51,6 +51,9 @@ return defer.promise;
 };
 
 
+
+
+
 Trooper.prototype.makeBattle = function(opponent){
 		var that= this, defer= q.defer(); 
 		var data = {
@@ -82,7 +85,6 @@ Trooper.prototype.makeRaid = function(){
 				var msg = CookieManager.getMessageByCookie(cookies);
 				defer.resolve(msg);
 			}else{
-				//if(headers['location'] === '/b/view/raid')
 				defer.resolve(-174);
 			}
 		}, function(){ 
@@ -91,6 +93,34 @@ Trooper.prototype.makeRaid = function(){
 		return defer.promise;
 };
  
+Trooper.prototype.upgrade = function(trooper){
+
+		var defer= q.defer(); 	 
+		var promise= this.req.send(this.urlManager.getTrooperUpgradeUrl(this.chk, trooper));
+		promise.then(function(response){	
+			var headers = response.getHeaders();
+			var cookies= response.getCookies();	
+			console.log(headers);
+
+			if(cookies){
+				CookieManager.getTextByCookie()
+			}
+			
+			switch(headers['location']){
+				case ('/levelup/'+(trooper || 0)):
+					console.log("skill selection available");
+				break;
+				case  ('/t/'+(trooper || 0)):
+					console.log("could'n upgrade");
+				break;
+			};
+
+			
+		}, function(){ 
+			console.log("not catched err")
+		});
+		return defer.promise;
+};
 
 
 Trooper.prototype.makeMission = function(){

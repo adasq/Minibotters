@@ -25,20 +25,26 @@ fs.writeFile("./test.html", b, function(err) {
 
 var trooper = new Trooper({
 	domain: "com",
-	name: "ziemniaki4",
+	name: "qqqqqqq",
 	opponent: "niekoxaj"
 //	name: "exampletrooper",
 //	pass: "examplePassword" 
 });
 
 var promise = trooper.auth();
-promise.then(function(result){	
+promise.then(function(result){
 console.log("auth:", result.code, result.message);
- trooper.urlManager.getMainTrooperUrl()
-var promise = trooper.req.get("http://ziemniaki4.minitroopers.com/");
-promise.then(function(r){	
-	writeToFile(r);
+
+
+var promise = trooper.upgrade(1);
+promise.then(function(result){
+	console.log(result);
 });
+
+// var promise = trooper.req.get("http://ziemniaki4.minitroopers.com/");
+// promise.then(function(r){	
+// 	writeToFile(r);
+// });
 
 // 	var promise= trooper.makeMissions();
 //  	promise.then(function(resp){

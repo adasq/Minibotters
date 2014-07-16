@@ -18,7 +18,9 @@ module.exports = function(config){
 	this.getBattleUrl= function(){
 		return baseUrl+"b/battle";
 	};
-
+	this.getTrooperUpgradeUrl= function(chk, trooper){
+		return baseUrl+"t/"+(trooper || 0)+"?levelup="+chk;
+	};
 	this.getMainTrooperUrl= function(){
 		return baseUrl+"t/0";
 	};

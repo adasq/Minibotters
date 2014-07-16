@@ -7,6 +7,9 @@ module.exports =   {
 		var num = matcher[0].substr(5).slice(0,-1);
 		return +num;
 	},
+	getMessageByUpgradeCookie: function(cookie){
+
+	};
 	getTextByCookie: function(cookie){
 		var matcher = cookie.match(/:texty\d+:/);
 		if(!matcher){
