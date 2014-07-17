@@ -26,7 +26,7 @@ if(this.config.pass){
 	};
 	promise= this.req.post(this.urlManager.getLoginUrl(), data);
 }else{	
-	promise= this.req.send(this.urlManager.getMainTrooperUrl());
+	promise= this.req.send(this.urlManager.getBaseUrl());
 }
 
 promise.then(function(response){
@@ -103,19 +103,24 @@ Trooper.prototype.upgrade = function(trooper){
 			console.log(headers);
 
 			if(cookies){
-				CookieManager.getTextByCookie()
-			}
-			
-			switch(headers['location']){
+				var code = CookieManager.getTextByCookie(cookies);
+				defer.resolve(code);
+			}else{
+				switch(headers['location']){
 				case ('/levelup/'+(trooper || 0)):
 					console.log("skill selection available");
+					defer.resolve(501);
 				break;
 				case  ('/t/'+(trooper || 0)):
 					console.log("could'n upgrade");
+					defer.resolve(503);
+				break;
+				case  '/hq':
+					defer.resolve(504);
 				break;
 			};
 
-			
+			}			
 		}, function(){ 
 			console.log("not catched err")
 		});

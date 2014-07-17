@@ -12,6 +12,14 @@ module.exports =  {
 			"-174": "You have passed Raid!",
 			"142": "you have failed raid"
 		},
+		upgrade:{
+			"139": "Not enought money to make an upgrade",
+			"83": "This trooper has already leveled up today!",
+			"501": "skill selection available / upgrade success",
+			"502": "could not upgrade",
+			"503": "could not upgrade",
+			"504": "trooper does not exists"
+		},
 		auth: {
 			"46": "You need to authorize",
 			"21": "Wrong Password",

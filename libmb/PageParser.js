@@ -29,7 +29,36 @@ return {
 	money: +money,
 	needToUpgrade: +needToUpgrade
 };
-
 };
+
+
+
+this.getTrooperUpgradeInfo = function(b){
+var $ = cheerio.load(b, {normalizeWhitespace: true}),
+onclick, matcher, money = $('.money').text().trim(),
+needToUpgrade = $("a[class='but_bg b3_bg img']").text().trim(),
+availableSkills = [], i=0, items = $('div.box8'), itemsLength= items.length;
+for(;i<itemsLength;++i){
+	$ = cheerio.load(items.eq(i).html());	
+	onclick= items.eq(i)[0].attribs.onclick;
+	matcher = onclick.match(/\?skill=\d+&/); 
+	onclick = matcher && matcher[0].substr(7).slice(0,-1);
+		availableSkills.push({
+			skillId: onclick,
+			name: $('h2').text(),
+			description: $('.s').text()
+		});
+}
+ return availableSkills;
+};
+
+
+
+
+
+
+
+
+
 
 };

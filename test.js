@@ -25,38 +25,49 @@ fs.writeFile("./test.html", b, function(err) {
 
 var trooper = new Trooper({
 	domain: "com",
-	name: "qqqqqqq",
+	name: "qqqqqqqq",
 	opponent: "niekoxaj"
 //	name: "exampletrooper",
 //	pass: "examplePassword" 
 });
-
+var parser = new PageParser();
 var promise = trooper.auth();
 promise.then(function(result){
+
 console.log("auth:", result.code, result.message);
 
+//TROOPERS PAGE INFO
+var promise = trooper.req.get(trooper.urlManager.getTrooperUrl(0));
+promise.then(function(body){ 
+	var availableSkills = parser.getTrooperUpgradeInfo(body);
+	console.log(availableSkills);
+ 
 
-var promise = trooper.upgrade(1);
-promise.then(function(result){
-	console.log(result);
 });
 
-// var promise = trooper.req.get("http://ziemniaki4.minitroopers.com/");
-// promise.then(function(r){	
-// 	writeToFile(r);
+var promise = trooper.req.get(trooper.urlManager.getTrooperUrl(1));
+promise.then(function(body){ 
+	var trooperInfo = parser.getTrooperInfo(body);
+	console.log(trooperInfo);
+});
+
+//UPGRADE:
+// var promise = trooper.upgrade(1);
+// promise.then(function(result){
+// 	console.log(result,  CookieMessages.upgrade[result]);
 // });
 
+
+//FIGHT:
 // 	var promise= trooper.makeMissions();
 //  	promise.then(function(resp){
 // 	  console.log("makeMissions ",resp);	  
 // 	});
 
-
 // var promise= trooper.makeBattles();
 //  	promise.then(function(resp){
 // 	  console.log("makeBattles", resp);	  
 // 	});
-
 
 // var promise= trooper.makeRaids();
 //  	promise.then(function(resp){
