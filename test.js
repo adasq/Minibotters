@@ -1,93 +1,63 @@
-var request = require('request');
-var _ = require('underscore');
-var q = require('q');
-var URLManager = require('./libmb/URLManager'); 
-var Response = require('./libmb/Response'); 
-var Request = require('./libmb/Request'); 
-var CookieMessages= require('./libmb/CookieMessages'); 
-var CookieManager = require('./libmb/CookieManager'); 
-var PageParser =  require('./libmb/PageParser'); 
-var Trooper =  require('./libmb/Trooper'); 
-var cheerio = require('cheerio'); 
+var request = require('request'),
+_ = require('underscore'),
+q = require('q'),
+URLManager = require('./libmb/URLManager'), 
+Response = require('./libmb/Response'), 
+Request = require('./libmb/Request'), 
+CookieMessages= require('./libmb/CookieMessages'), 
+CookieManager = require('./libmb/CookieManager'), 
+PageParser =  require('./libmb/PageParser'), 
+Trooper =  require('./libmb/Trooper'), 
+cheerio = require('cheerio'), 
+fs = require('fs');
 
-var fs = require('fs');
-
+var parser = new PageParser();
 
 var writeToFile = function(b){
-fs.writeFile("./examle.txt", b, function(err) {
+fs.writeFile("./debug.txt", b, function(err) {
     if(err) {
         console.log(err);
     } else {
-        console.log("The file was saved!");
+        console.log("[DEBUG FILE UPDATED]");
     }
 }); 
 };
 
 
-var trooperConfig = require('./config');
 
+var trooperConfig = require('./config');
 var trooper = new Trooper(trooperConfig);
 
 
-var parser = new PageParser();
+try{
+trooper.getArmyList();
+
+}catch(exception){
+	console.log(exception);
+}
+
+
+
 var promise = trooper.auth();
 promise.then(function(result){
-console.log("auth:", result.code, result.message);
-var promise = trooper.getArmyList();
-promise.then(function(armyList){
-	console.log(armyList);
-})
-// var promise = trooper.req.get(trooper.urlManager.getTrooperArmyPageList());
-// promise.then(function(body){   
-// var list = parser.getTrooperArmyList(body);
-// console.log(list);
+console.log("[AUTH]", result.code, result.message);
 
 
-// _.each(list, function(trooperId){
-
-// var url = 'http://ziemniaki.minitroopers.com/details?t='+trooperId;
-// var promise = trooper.req.get(url);
-// promise.then(function(body){
-// var detalis = parser.getTrooperDetalis(body);
-// console.log(detalis);
+//============================ PARSE DATA ======================
+//get trooper skills, money and amount needed to upgrade
+// var promise = trooper.getTrooperSkillList(1);
+// promise.then(function(skillList){ 
+// 	console.log(skillList);
 // });
 
+//get trooper upgrade skills to select
+// var promise = trooper.getTrooperUpgradeSkillList(0);
+// promise.then(function(skillList){ 
+// 	console.log(skillList);
 // });
 
+//============================ FIGHT ======================
 
-// });
-
-// var url = 'http://ziemniaki.minitroopers.com/details?t=1210152';
-// var promise = trooper.req.get(url);
-// promise.then(function(body){
-// var detalis = parser.getTrooperDetalis(body);
-// console.log(detalis);
-// });
- 
-
-
-//TROOPERS PAGE INFO
-// var promise = trooper.req.get(trooper.urlManager.getTrooperUrl(0));
-// promise.then(function(body){ 
-// 	var availableSkills = parser.getTrooperUpgradeInfo(body);
-// 	console.log(availableSkills);
- 
-
-// });
-// var promise = trooper.req.get(trooper.urlManager.getTrooperUrl(1));
-// promise.then(function(body){ 
-// 	var trooperInfo = parser.getTrooperInfo(body);
-// 	console.log(trooperInfo);
-// });
-
-//UPGRADE:
-// var promise = trooper.upgrade(1);
-// promise.then(function(result){
-// 	console.log(result,  CookieMessages.upgrade[result]);
-// });
-
-
-//FIGHT:
 // 	var promise= trooper.makeMissions();
 //  	promise.then(function(resp){
 // 	  console.log("makeMissions ",resp);	  
@@ -103,4 +73,23 @@ promise.then(function(armyList){
 // 	  console.log("makeRaids", resp);	  
 // });
 
+//============================ UPGRADE ======================
+
+// var promise = trooper.upgrade(1);
+// promise.then(function(result){
+// 	console.log(result,  CookieMessages.upgrade[result]);
+// });
+
+//============================  YOUR ARMY ======================
+
+var promise = trooper.getArmyList();
+promise.then(function(armyList){
+	console.log(armyList);
+});
+
+
+
+
+
+//===============================================================
 });

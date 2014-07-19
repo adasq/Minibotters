@@ -92,6 +92,42 @@ return defer.promise;
 };
 //==========================================================
 
+Trooper.prototype.getTrooperSkillList = function(trooperId){
+var parser= new PageParser(), trooper = (trooperId || 0), that= this, defer= q.defer(); 
+
+var promise = this.req.get(this.urlManager.getTrooperUrl(trooper));
+promise.then(function(body){ 
+	var trooperInfo = parser.getTrooperInfo(body);
+	defer.resolve(trooperInfo);
+});
+
+
+		return defer.promise;	
+};
+
+//==========================================================
+
+
+Trooper.prototype.getTrooperUpgradeSkillList = function(trooperId){
+var parser= new PageParser(), trooper = (trooperId || 0), that= this, defer= q.defer(); 
+
+var promise = this.req.get(this.urlManager.getTrooperUrl(trooper));
+promise.then(function(body){ 
+	var availableSkills = parser.getTrooperUpgradeInfo(body);
+	defer.resolve(availableSkills);
+}); 
+
+
+		return defer.promise;	
+};
+
+//==========================================================
+
+
+
+
+
+
 
 Trooper.prototype.makeBattle = function(opponent){
 		var that= this, defer= q.defer(); 
@@ -222,6 +258,27 @@ Trooper.prototype.makeMissions= function(){
 Trooper.prototype.toString= function(){
 	return "chk: "+this.chk;
 };
+
+
+var preventAuthChecking = ['auth', 'toString'];
+var checkAuth = function(){	 
+	return !!this.chk;
+};
+ 
+_.each(Trooper.prototype, function(val, name){	
+	if(_.isFunction(Trooper.prototype[name]) && !_.contains(preventAuthChecking, name)){
+		var oldFunction = Trooper.prototype[name];
+		Trooper.prototype[name] = function(){	
+			var isAuthorized= checkAuth.call(this);
+			if(isAuthorized){
+				return oldFunction.apply(this, arguments);
+			}else{
+				throw "You need to authorize, in order to call "+name+"() method.";
+			}		 
+			
+		};
+	}	
+});
 
 
 module.exports =  Trooper;
