@@ -1,4 +1,5 @@
 var URLManager = require('./URLManager');  
+var PageParser = require('./PageParser');  
 var Request = require('./Request'); 
 var CookieMessages= require('./CookieMessages'); 
 var CookieManager = require('./CookieManager'); 
@@ -52,6 +53,44 @@ return defer.promise;
 
 
 
+var fs = require('fs');
+
+
+var writeToFile = function(b){
+fs.writeFile("./examle.txt", b, function(err) {
+    if(err) {
+        console.log(err);
+    } else {
+        console.log("The file was saved!");
+    }
+}); 
+};
+
+//==========================================================
+Trooper.prototype.getArmyList = function(){
+	var armyMembersList=[], promiseList= [], list, promise, that=this, parser= new PageParser(), defer= q.defer();
+ 
+promise = this.req.get(this.urlManager.getTrooperArmyPageList());
+promise.then(function(body){
+	// console.log(body)
+	// writeToFile(body)
+list = parser.getTrooperArmyList(body);
+//list= list.slice(0, 10);
+_.each(list, function(trooperId){
+promise = that.req.get(that.urlManager.getTrooperArmyMemberDetalis(trooperId));
+promiseList.push(promise);
+});
+q.all(promiseList).then(function(pages){
+	_.each(pages, function(trooperArmyMemberPage){
+		 var detalis = parser.getTrooperDetalis(trooperArmyMemberPage);		
+		 armyMembersList.push(detalis);		 
+	});
+	defer.resolve(armyMembersList);
+});
+});
+return defer.promise;
+};
+//==========================================================
 
 
 Trooper.prototype.makeBattle = function(opponent){

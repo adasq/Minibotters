@@ -31,7 +31,25 @@ return {
 };
 };
 
+this.getTrooperArmyList = function(res){
+var items2=[], items = res.match(/i\d+R/g),firstTrooperException = res.match(/%01i\d+y13/g)[0];
+firstTrooperException = firstTrooperException.substr(4).slice(0, -3);
+items2.push(firstTrooperException);
+_.each(items, function(item, i ){
+		if(+i%2 !== 0){
+			items2.push(item.substr(1).slice(0, -1));
+		}	
+});
+return items2;
+};
 
+this.getTrooperDetalis = function(body){
+var $ = cheerio.load(body, {normalizeWhitespace: true});
+var name=  ($("p.owner").text());
+return {
+	name: name
+};
+};
 
 this.getTrooperUpgradeInfo = function(b){
 var $ = cheerio.load(b, {normalizeWhitespace: true}),
