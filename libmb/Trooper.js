@@ -37,15 +37,15 @@ var code = null;
 if(response.isRedirect()){
   	code= CookieManager.getTextByCookie(cookie);
   	if(that.config.pass){
+  		that.chk = CookieManager.getCHKByCookie(cookie); 
  		code= code || 201;
   	}else{
   		code= code || 501;
-  	}	
+  	} 
 }else{
  	that.chk = CookieManager.getCHKByCookie(cookie); 
  	code= 201;
 }
-
  defer.resolve({code: code, message: CookieMessages.auth[code]});
 });
 return defer.promise;
@@ -68,10 +68,12 @@ fs.writeFile("./examle.txt", b, function(err) {
 
 //==========================================================
 Trooper.prototype.getArmyList = function(){
+console.log("Wait for your list...")
 	var armyMembersList=[], promiseList= [], list, promise, that=this, parser= new PageParser(), defer= q.defer();
- 
+
 promise = this.req.get(this.urlManager.getTrooperArmyPageList());
 promise.then(function(body){
+
 list = parser.getTrooperArmyList(body);
 _.each(list, function(trooperId){
 promise = that.req.get(that.urlManager.getTrooperArmyMemberDetalis(trooperId));
@@ -170,19 +172,15 @@ Trooper.prototype.upgrade = function(trooper){
 		promise.then(function(response){	
 			var headers = response.getHeaders();
 			var cookies= response.getCookies();	
-			console.log(headers);
-
-			if(cookies){
+		 if(cookies){
 				var code = CookieManager.getTextByCookie(cookies);
 				defer.resolve(code);
 			}else{
 				switch(headers['location']){
-				case ('/levelup/'+(trooper || 0)):
-					console.log("skill selection available");
+				case ('/levelup/'+(trooper || 0)):				
 					defer.resolve(501);
 				break;
 				case  ('/t/'+(trooper || 0)):
-					console.log("could'n upgrade");
 					defer.resolve(503);
 				break;
 				case  '/hq':
@@ -247,7 +245,6 @@ Trooper.prototype.selectSkill = function(trooperId, skill){
 		var headers= response.getHeaders();	
 		var location = headers['location'];	
 		var cookies= response.getCookies();
-		console.log(headers);
 		if(cookies){	
 			if(headers['location'] === '/hq'){
 				defer.resolve('*');

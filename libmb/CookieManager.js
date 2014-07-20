@@ -1,5 +1,6 @@
 module.exports =   {
 	getCHKByCookie: function(cookie){
+		 
 		return cookie.substr(47, 6);
 	},
 	getMessageByCookie: function(cookie){

@@ -39,8 +39,7 @@ var trooper = new Trooper(trooperConfig);
 var promise = trooper.auth();
 promise.then(function(result){
 console.log("[AUTH]", result.code, result.message);
-
-
+ 
 //============================ PARSE DATA ======================
 //get trooper skills, money and amount needed to upgrade
 // var promise = trooper.getTrooperSkillList(1);
@@ -88,14 +87,10 @@ console.log("[AUTH]", result.code, result.message);
 
 //============================  YOUR ARMY ======================
 
-// var promise = trooper.getArmyList();
-// promise.then(function(armyList){
-// 	console.log(armyList);
-// });
-
-
-
-
+var promise = trooper.getArmyList();
+promise.then(function(armyList){
+	console.log(armyList);
+}); 
 
 //===============================================================
 });
