@@ -29,13 +29,11 @@ var trooperConfig = require('./config');
 var trooper = new Trooper(trooperConfig);
 
 
-try{
-trooper.getArmyList();
-
-}catch(exception){
-	console.log(exception);
-}
-
+// try{
+// 	trooper.getArmyList();
+// }catch(exception){
+// 	console.log(exception);
+// }
 
 
 var promise = trooper.auth();
@@ -75,17 +73,25 @@ console.log("[AUTH]", result.code, result.message);
 
 //============================ UPGRADE ======================
 
+//upgrade specific trooper
 // var promise = trooper.upgrade(1);
 // promise.then(function(result){
 // 	console.log(result,  CookieMessages.upgrade[result]);
 // });
 
+//select upgraded skill selectSkill(trooper, skill)
+// var promise = trooper.selectSkill(2, 101);
+// promise.then(function(result){
+//  console.log(result, CookieMessages.skillSelection[result]);
+// });
+
+
 //============================  YOUR ARMY ======================
 
-var promise = trooper.getArmyList();
-promise.then(function(armyList){
-	console.log(armyList);
-});
+// var promise = trooper.getArmyList();
+// promise.then(function(armyList){
+// 	console.log(armyList);
+// });
 
 
 

@@ -20,6 +20,13 @@ module.exports =  {
 			"503": "could not upgrade",
 			"504": "trooper does not exists"
 		},
+		skillSelection: {
+			"*": "Congratulations, you have successfully selected skill",
+			"-1": "Skill not selected",
+			"501": "you can not select this skill",
+			"502": "This trooper could not be upgraded",
+			"503": "Check if trooper really exists"
+		},
 		auth: {
 			"46": "You need to authorize",
 			"21": "Wrong Password",

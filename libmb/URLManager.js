@@ -38,9 +38,12 @@ module.exports = function(config){
 	};
 	this.getTrooperArmyPageList = function(){
 		return baseUrl+'load?pos=0;count=222';
-	}
+	};
 	this.getTrooperArmyMemberDetalis = function(armyMemberId){
 		return baseUrl+'details?t='+armyMemberId;
-	}
+	};
+	this.getSelectUpgradeSkillUrl = function(chk, trooper, skill){
+		return baseUrl+'levelup/'+trooper+'?skill='+skill+'&chk='+chk;
+	};
 
 }; 

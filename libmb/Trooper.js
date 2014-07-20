@@ -72,10 +72,7 @@ Trooper.prototype.getArmyList = function(){
  
 promise = this.req.get(this.urlManager.getTrooperArmyPageList());
 promise.then(function(body){
-	// console.log(body)
-	// writeToFile(body)
 list = parser.getTrooperArmyList(body);
-//list= list.slice(0, 10);
 _.each(list, function(trooperId){
 promise = that.req.get(that.urlManager.getTrooperArmyMemberDetalis(trooperId));
 promiseList.push(promise);
@@ -100,8 +97,6 @@ promise.then(function(body){
 	var trooperInfo = parser.getTrooperInfo(body);
 	defer.resolve(trooperInfo);
 });
-
-
 		return defer.promise;	
 };
 
@@ -245,6 +240,42 @@ Trooper.prototype.makeBattles= function(){
 		return promise;
 };
 
+Trooper.prototype.selectSkill = function(trooperId, skill){
+	var trooper = (trooperId || 0), that= this, defer= q.defer(); 
+	var promise = this.req.send(this.urlManager.getSelectUpgradeSkillUrl(this.chk, trooper, skill));
+	promise.then(function(response){ 
+		var headers= response.getHeaders();	
+		var location = headers['location'];	
+		var cookies= response.getCookies();
+		console.log(headers);
+		if(cookies){	
+			if(headers['location'] === '/hq'){
+				defer.resolve('*');
+			}else{
+				console.log("unexcepted1");
+			}	
+		 }else{		 	
+		 		if(!location){
+		 			 defer.resolve(501);
+		 		}else{
+		 			switch(location){
+		 				case ('/t/'+trooper): 
+		 					defer.resolve(502);
+		 				break;
+		 				case '/hq':
+		 					defer.resolve(503);
+		 				break;
+		 				default: 
+		 					console.log('unexcepted2')
+		 				break;
+		 			}
+		 		}
+		 		defer.resolve(-1);
+				
+		}
+	});
+	return defer.promise;
+};
 
 Trooper.prototype.makeMissions= function(){
 		var promise= q.all([
@@ -260,8 +291,8 @@ Trooper.prototype.toString= function(){
 };
 
 
-var preventAuthChecking = ['auth', 'toString'];
-var checkAuth = function(){	 
+var preventAuthChecking = ['auth', 'toString'],
+checkAuth = function(){	 
 	return !!this.chk;
 };
  
