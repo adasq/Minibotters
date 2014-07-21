@@ -9,6 +9,7 @@ CookieManager = require('./libmb/CookieManager'),
 PageParser =  require('./libmb/PageParser'), 
 Trooper =  require('./libmb/Trooper'), 
 cheerio = require('cheerio'), 
+express = require('express'),
 fs = require('fs');
 
 var parser = new PageParser();
@@ -25,6 +26,26 @@ fs.writeFile("./debug.txt", b, function(err) {
 
 
 
+
+var app = express();
+app.listen(80);
+
+
+
+app.get('/test', function(req, res){  
+var trooperConfig = require('./config');
+var trooper = new Trooper(trooperConfig);
+
+	trooper.auth().then(function(result){
+		console.log("[AUTH]", result.code, result.message);
+
+		trooper.getArmyList().then(function(armyList){		 
+			res.send(armyList);
+		});
+	});  
+});
+
+//===========================================
 var trooperConfig = require('./config');
 var trooper = new Trooper(trooperConfig);
 
