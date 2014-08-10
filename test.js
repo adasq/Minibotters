@@ -10,25 +10,43 @@ PageParser =  require('./libmb/PageParser'),
 Trooper =  require('./libmb/Trooper'), 
 cheerio = require('cheerio'), 
 express = require('express'),
-fs = require('fs');
+fs = require('fs'),
+mongoose = require('mongoose'),
+routesGET = require('./app/routes/get'),
+routesPOST = require('./app/routes/post'),
+db = require('./app/db/connect');
+
 
 var parser = new PageParser();
 
-var writeToFile = function(b){
-fs.writeFile("./debug.txt", b, function(err) {
-    if(err) {
-        console.log(err);
-    } else {
-        console.log("[DEBUG FILE UPDATED]");
-    }
-}); 
-};
-
-
-
+// var writeToFile = function(b){
+// fs.writeFile("./debug.txt", b, function(err) {
+//     if(err) {
+//         console.log(err);
+//     } else {
+//         console.log("[DEBUG FILE UPDATED]");
+//     }
+// }); 
+// };
 
 var app = express();
 app.listen(80);
+
+
+app.use(function(req, res, next) {
+  //session handling here...
+  next();
+});
+
+_.each(routesGET, function(route){
+  app.get(route.url, route.callback);
+});
+_.each(routesPOST, function(route){
+  app.post(route.url, route.callback);
+});
+
+
+
 
 
 

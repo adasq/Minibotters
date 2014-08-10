@@ -19,7 +19,8 @@
     "underscore": "latest",
     "node-codein" : "",
     "cheerio": "",
-    "q": "1.0.1"
+    "q": "1.0.1",
+     "mongoose": "3.8.8"
   }, 
   "author": "",
   "license": "ISC"
