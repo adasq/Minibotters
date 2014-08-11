@@ -7,4 +7,5 @@ db = mongoose.connect(config.connectionURI);
 
 module.exports =  {
 	Message: model.Message(db),
+	User: model.User(db)
 };
