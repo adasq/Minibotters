@@ -1,8 +1,15 @@
 var db = require('../db/connect'),
+Utils = require('./Utils'),
+_ = require('underscore'),
 q = require('q');
+
 
 var User = function(data){
 	this.data = data;
+	if(!data._id){
+		this.data.pass = Utils.getHashByPassword(this.data.pass);
+		this.data.apitoken = Utils.getUUID();
+	};	
 };
  
 
@@ -14,7 +21,7 @@ db.User.findOne(options, function (err, person) {
   	if(err){
 			deferred.reject();
 		}else{
-			deferred.resolve(new User(person));
+			deferred.resolve((person?(new User(person)):null));
 		}
 });
 return deferred.promise;	
@@ -29,16 +36,38 @@ User.getUserById = function(id){
 };
 
 User.prototype.toString = function(argument) {
-	return ";;";
+	return "";
 };
 
+User.prototype.isPasswordCorrect = function(plain) {
+	return (this.data.pass === Utils.getHashByPassword(plain));
+};
+
+User.prototype.getSessionByUserAgent = function(ua) {
+	return _.find(this.data.sessions, function(session){
+			return (Utils.getHashByPassword(ua) === session.userAgent);
+	});
+};
+
+User.prototype.createSession = function(ua) {
+	var that = this;
+	db.User.findByIdAndUpdate(
+    that.data._id,
+    {$push: {"sessions": "d43f54f63r545t"}},
+    {safe: true, upsert: true},
+    function(err, model) {
+        console.log("createSession",err, model);
+    }
+);
+
+};
 
 User.prototype.save = function() {	
 	var that=this, deferred = q.defer();
 	if(this.data._id){
 		//update
-		this.data.save(function(err, model){
-			if(err){
+		this.data.save(function(err, model){			
+			if(err){			
 					deferred.reject();
 			}else{
 				that.data = model;
@@ -47,6 +76,7 @@ User.prototype.save = function() {
 		});
 	}else{
 		//create
+		console.log(this.data)
 		var user = new db.User(this.data);
 		user.save(function(err, model){
 		if(err){

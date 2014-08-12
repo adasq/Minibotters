@@ -6,6 +6,6 @@ mongoose = require('mongoose');
 db = mongoose.connect(config.connectionURI);
 
 module.exports =  {
-	Message: model.Message(db),
-	User: model.User(db)
+	User: model.User(db),
+	Session: model.Session(db)
 };

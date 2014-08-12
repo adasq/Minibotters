@@ -1,6 +1,7 @@
 var request = require('request'),
 _ = require('underscore'),
 q = require('q'),
+config = require('./app/config'),
 URLManager = require('./libmb/URLManager'), 
 Response = require('./libmb/Response'), 
 Request = require('./libmb/Request'), 
@@ -15,20 +16,25 @@ mongoose = require('mongoose'),
 routesGET = require('./app/routes/get'),
 routesPOST = require('./app/routes/post'),
 uuid= require('node-uuid'),
+crypto= require('crypto'),
 Utils= require('./app/models/Utils'),
 User= require('./app/models/User'),
 i18n = require("i18n"),
 db = require('./app/db/connect');
 
 i18n.configure({
-    locales:['en', "pl_PL"],
-    defaultLocale: 'en',
-     cookie: 'yourcookiename',
+    locales: config.i18n.locales,
+    defaultLocale: config.i18n.defaultLocale,
+    cookie: config.i18n.cookieName,
     directory: __dirname + '/app/lang'
 });
 
 var parser = new PageParser();
 
+
+
+// var key = crypto.pbkdf2Sync("wsadze", "salt",25000, 128);
+// console.log(key)
 // var writeToFile = function(b){
 // fs.writeFile("./debug.txt", b, function(err) {
 //     if(err) {
@@ -47,23 +53,20 @@ var parser = new PageParser();
 //   console.log("err");
 // });
 
-// var promise = User.getUserByName("adam2");
-// promise.then(function(adam){
-//     if(adam){
-
-//     }
+// var adam = new User("adam", "wsff");
+// var promise = adam.save();
+// promise.then(function(result){
+//   console.log("success", result);
 // }, function(){
-//   console.log("err db");
+//   console.log("err");
 // });
-var promise = User.getUserById("53e7c5bc3041d9c8120b2943");
+
+
+ 
+var promise = User.getUserByName("adam1");
 promise.then(function(adam){
     if(adam){
-      console.log(adam);
-      adam.data.pass = "zzzzzzzzz";
-      adam.save().then(function(){
-        console.log(adam)
-      })
-
+     console.log(adam)
     }else{
       console.log("no exists")
     }
@@ -78,18 +81,19 @@ var app = express();
   app.use(express.cookieParser()); 
   // i18n init parses req for language headers, cookies, etc.
   app.use(i18n.init);
- 
-
-
-app.listen(80);
-
- 
-
-
-app.use(function(req, res, next) {
+  //urlencoded
+  app.use(express.urlencoded()); 
   //session handling here...
+  app.use(function(req, res, next) {  
   next();
-});
+  });
+
+
+app.listen(config.PORT);
+
+ 
+
+
 
 _.each(routesGET, function(route){
   app.get(route.url, route.callback);
@@ -104,14 +108,19 @@ _.each(routesPOST, function(route){
 
 
 app.get('/test', function(req, res){ 
-  res.cookie('yourcookiename', 'pl_PL');
+  res.cookie(config.i18n.cookieName, 'pl_PL');
 console.log(res.__('hello')); 
 
+console.log(req.headers)
 
+var trooperConfig = {
+  domain: "com",
+  opponent: "nopls",
+  name: "ziemniaki3"
+};
 
-var trooperConfig = require('./config');
 var trooper = new Trooper(trooperConfig);
-
+  
 	trooper.auth().then(function(result){
 		console.log("[AUTH]", result.code, result.message);
 
@@ -122,7 +131,10 @@ var trooper = new Trooper(trooperConfig);
 });
 
 //===========================================
-var trooperConfig = require('./config');
+var trooperConfig = {
+  domain: "com",
+  opponent: "nopls",
+  name: "ziemniaki3"};
 var trooper = new Trooper(trooperConfig);
 
 
