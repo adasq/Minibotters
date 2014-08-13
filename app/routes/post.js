@@ -54,7 +54,7 @@ promise.then(function(user){
             var session = user.getSessionByUserAgent(req.headers['user-agent']);
             console.log(session);
             if(!session){
-                user.createSession(req.headers['user-agent'])
+                user.createSession(req.headers['user-agent']);
             }
       }else{
 

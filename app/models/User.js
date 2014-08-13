@@ -1,7 +1,10 @@
 var db = require('../db/connect'),
 Utils = require('./Utils'),
+Session = require('./Session'),
 _ = require('underscore'),
 q = require('q');
+
+
 
 
 var User = function(data){
@@ -51,14 +54,11 @@ User.prototype.getSessionByUserAgent = function(ua) {
 
 User.prototype.createSession = function(ua) {
 	var that = this;
-	db.User.findByIdAndUpdate(
-    that.data._id,
-    {$push: {"sessions": "d43f54f63r545t"}},
-    {safe: true, upsert: true},
-    function(err, model) {
-        console.log("createSession",err, model);
-    }
-);
+	var session = new Session({userAgent: Utils.getHashByPassword(ua), accessToken: Utils.getUUID()})
+   	session.save().then(function(session){
+console.log(session)
+   	});
+	
 
 };
 
