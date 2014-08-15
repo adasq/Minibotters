@@ -309,4 +309,97 @@ _.each(Trooper.prototype, function(val, name){
 });
 
 
+
+Trooper.normalizeName = (function(name){
+
+var StringBuf= function() {
+	this.b = "";
+};
+
+var removeAccentsUTF8 = function(s) {
+	var b = new StringBuf();
+	var _g1 = 0, _g = s.length;
+	while(_g1 < _g) {
+		var i = _g1++;
+		var c = s.charCodeAt(i);
+		switch(c) {
+		case 233:case 232:case 234:case 235:
+			b.b += "e";
+			break;
+		case 201:case 200:case 202:case 203:
+			b.b += "E";
+			break;
+		case 224:case 226:case 228:case 225:
+			b.b += "a";
+			break;
+		case 192:case 194:case 196:case 193:
+			b.b += "A";
+			break;
+		case 249:case 251:case 252:case 250:
+			b.b += "u";
+			break;
+		case 217:case 219:case 220:case 218:
+			b.b += "U";
+			break;
+		case 238:case 239:case 237:
+			b.b += "i";
+			break;
+		case 206:case 207:case 205:
+			b.b += "I";
+			break;
+		case 244:case 243:case 246:case 245:
+			b.b += "o";
+			break;
+		case 212:case 211:case 214:
+			b.b += "O";
+			break;
+		case 230:case 198:
+			b.b += "a";
+			b.b += "e";
+			break;
+		case 339:case 338:
+			b.b += "o";
+			b.b += "e";
+			break;
+		case 231:
+			b.b += "c";
+			break;
+		case 199:
+			b.b += "C";
+			break;
+		case 241:
+			b.b += "n";
+			break;
+		case 209:
+			b.b += "N";
+			break;
+		default:
+			b.b += String.fromCharCode(c);
+		}
+	}
+	return b.b;
+};
+
+ return function(name) {
+ 	var host = removeAccentsUTF8(name).toLowerCase(); 
+ 	host = host.trim();
+ host = host.replace(/\s+/g, "-");
+ 
+ 			host = host.replace(/[^a-z0-9.-]+/g, "");
+ 	if(host.length > 16) {
+		var parts = host.split("-");
+       if(parts[0].length >= 8)
+      {host = parts[0];}else{
+ 				host = host.substring(0, 16);
+ 		}
+ 	}
+ 	return host;
+ };
+
+})();
+
+
+
+
+
 module.exports =  Trooper;

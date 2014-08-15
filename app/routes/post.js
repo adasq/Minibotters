@@ -1,6 +1,7 @@
-var db = require('../db/connect');
-var User= require('../models/User');
-var Enums= require('../models/Enums');
+var db = require('../db/connect'),
+User= require('../models/User'),
+Trooper =  require('../../libmb/Trooper'),
+Enums= require('../models/Enums');
 
 
 var routes = [];
@@ -30,8 +31,6 @@ promise.then(function(user){
 		}
 });
 
-
-
 routes.push({
   url: "/login",
   callback: function(req, res){
@@ -45,11 +44,9 @@ promise.then(function(user){
     if(!user){
       res.send({error: true, message: "user not exists"});
     }else{    
-
       var isPassCorrect = (user.isPasswordCorrect(pass));
       var isApiTokenCorrect = (user.data.apitoken === apitoken);
       var isActive = (user.data.state !== Enums.User.State.INACTIVE);
-
       if(isPassCorrect && isApiTokenCorrect && isActive){
             var session = user.getSessionByUserAgent(req.headers['user-agent']);
             console.log(session);
@@ -57,25 +54,12 @@ promise.then(function(user){
                 user.createSession(req.headers['user-agent']);
             }
       }else{
-
-      }
-      
+      }      
       res.send({error: false, response:{
         isActive: isActive,
         isPassCorrect: isPassCorrect,
         isApiTokenCorrect: isApiTokenCorrect
-      }});
-     
-
-
-
-      // if(user.isPasswordCorrect(pass)){
-      //     res.send({error: false, message: "pswd ok"});
-      // }else{
-      //     res.send({error: true, message: "pswd :("});
-      // }
-
-      
+      }});      
     }
 }, function(){
   console.log("err db");
@@ -84,6 +68,29 @@ promise.then(function(user){
 });
 
 
+routes.push({
+  url: "/generateList",
+  callback: function(req, res){
+      var post_data = req.body;
+var name = post_data.name;
+var pass = post_data.pass;
+var trooperConfig = {
+  domain: "com",
+  opponent: "nopls",
+  name: name
+};
+var trooper = new Trooper(trooperConfig);
+var promise = trooper.auth();
+promise.then(function(result){
+console.log("[AUTH]", result.code, result.message);
+  var promise = trooper.getArmyList();
+promise.then(function(armyList){
+  res.send({armyList: armyList});
+}); 
+});  
+}     
+
+});
 
 
 module.exports = routes;

@@ -17,7 +17,4 @@ Utils.getHashByPassword = function(pass){
 
 
 
- 
-
-
 module.exports = Utils;

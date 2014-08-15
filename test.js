@@ -21,6 +21,41 @@ Utils= require('./app/models/Utils'),
 User= require('./app/models/User'),
 i18n = require("i18n"),
 db = require('./app/db/connect');
+ 
+
+ 
+// var adam = new User({name: "adam3", pass: "wsff"});
+// var promise = adam.save();
+// promise.then(function(result){
+//   console.log("success", result);
+// }, function(){
+//   console.log("err");
+// });
+
+ 
+
+// db.User.findOne({name: "adam3"}, function(err, model){
+ 
+//      db.User.update( { _id: model._id}, { $set: { "trooperLists.2.troopers" : [{name: "xd", pass:"xd"}] } }, function(err, model){
+//       console.log(err, model)
+//      } )
+
+// });
+// promise.then(function(adam){
+//     if(adam){      
+
+//     }else{
+//       console.log("no exists")
+//     }
+// }, function(){
+//   console.log("err db");
+// });
+// db.Trooper.findById("53edc66395cec91c02b88401", function(err, model){
+//   console.log(err, model)
+//  });
+
+
+
 
 i18n.configure({
     locales: config.i18n.locales,
@@ -29,6 +64,11 @@ i18n.configure({
     directory: __dirname + '/app/lang'
 });
 
+
+
+
+console.log(Trooper.normalizeName("siem aa"))
+console.log(Trooper.normalizeName("siem A(a"))
 var parser = new PageParser();
 
 
@@ -87,11 +127,11 @@ var app = express();
   app.use(function(req, res, next) {  
   next();
   });
-
+  //static webapp 
+  app.use('/', express.static(__dirname + '/webapp'));
 
 app.listen(config.PORT);
 
- 
 
 
 

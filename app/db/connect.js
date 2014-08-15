@@ -7,5 +7,7 @@ db = mongoose.connect(config.connectionURI);
 
 module.exports =  {
 	User: model.User(db),
-	Session: model.Session(db)
+	Session: model.Session(db),
+	Trooper: model.Trooper(db),
+	TrooperList: model.TrooperList(db)
 };
