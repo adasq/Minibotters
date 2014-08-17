@@ -10,8 +10,7 @@ q = require('q');
 var User = function(data){
 	this.data = data;
 	if(!data._id){
-		this.data.pass = Utils.getHashByPassword(this.data.pass);
-		this.data.apitoken = Utils.getUUID();
+		this.data.pass = Utils.getHashByPassword(this.data.pass);	
 	};	
 };
  
@@ -76,11 +75,10 @@ User.prototype.save = function() {
 		});
 	}else{
 		//create
-		console.log(this.data)
 		var user = new db.User(this.data);
 		user.save(function(err, model){
 		if(err){
-			deferred.reject();
+			deferred.reject(err);
 		}else{
 			deferred.resolve(model);
 		}

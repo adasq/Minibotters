@@ -37,3 +37,23 @@ body > .container {
 code {
   font-size: 80%;
 }
+
+
+input.ng-dirty.ng-invalid {
+  border: 1px solid red;
+}
+
+
+
+
+.selectable {
+    cursor: pointer;
+}
+
+.highlighted { 
+  border-left: 3px solid yellow;
+}
+
+.selected{  
+  background-color: #eee;
+}

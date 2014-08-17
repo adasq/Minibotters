@@ -1,47 +1,84 @@
+
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <button class="navbar-toggle" type="button" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">BASEAPP</a>
+      <a class="navbar-brand" href="#">MINIBOTTERS</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class=""><a ui-sref="state1">state1</a></li>
-        <li class=""><a ui-sref="state2">state2</a></li> 
-<!--         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li> -->
+      <ul ng-show="base.auth && !base.auth.loggedIn" class="nav navbar-nav">
+        <li class=""><a ui-sref="register">register</a></li>
+        <li class=""><a ui-sref="login">login</a></li> 
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
+      <ul ng-show="base.auth && base.auth.loggedIn" class="nav navbar-nav">
+        <li class=""><a ui-sref="register">Lista</a></li>
+        <li class=""><a ui-sref="login">inne</a></li>
+        <li class=""><a ui-sref="example">example</a></li> 
+      </ul>
+
+      <ul ng-show="base.auth && base.auth.loggedIn" class="nav navbar-nav navbar-right">
+        <!-- <li><a href="#">Link</a></li> -->
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{base.auth.user.data.name}}<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
+           <!--  <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li> -->
             <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a href="#" ng-click="logout()">Logout</a></li>
           </ul>
         </li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+
+<nav id="navbar-example" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button class="navbar-toggle" type="button" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MINIBOTTERS</a>
+        </div>
+        <div collapse="isCollapsed" class="navbar-collapse bs-js-navbar-collapse">
+
+<ul ng-show="base.auth && !base.auth.loggedIn" class="nav navbar-nav">
+        <li class=""><a ui-sref="register">register</a></li>
+        <li class=""><a ui-sref="login">login</a></li> 
+      </ul>
+      <ul ng-show="base.auth && base.auth.loggedIn" class="nav navbar-nav">
+        <li class=""><a ui-sref="register">Lista</a></li>
+        <li class=""><a ui-sref="login">inne</a></li>
+        <li class=""><a ui-sref="example">example</a></li> 
+      </ul>
+
+
+          <ul ng-show="base.auth && base.auth.loggedIn" class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{base.auth.user.data.name}}<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+           <!--  <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li> -->
+            <li class="divider"></li>
+            <li><a href="#" ng-click="logout()">Logout</a></li>
+          </ul>
+        </li>
+          </ul>
+        </div><!-- /.nav-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>

@@ -1,12 +1,13 @@
 
 var mongoose = require('mongoose'),
+uniqueValidator = require('mongoose-unique-validator');
 Schema = mongoose.Schema;
 
 //------------------------------------------
 var User = new Schema({
-   name     : {type: String, required: true}, 
+   name     : {type: String, unique: true, required: true}, 
    pass     : {type: String, required: true},
-   apitoken : {type: String, required: true},    
+   mail     : {type: String, unique: true, required: true},   
    state	: {type: Number, default: 0},
    deleted 	: {type: Boolean, default: false},
    regDate	: {type: Date, default: new Date()},
@@ -14,11 +15,8 @@ var User = new Schema({
    trooperLists : [TrooperList]
 });
 
-User.pre('update', function (next) {
-  
-  next("xxxx");
-});
- 
+User.plugin(uniqueValidator);
+
 
 
 mongoose.model('User', User);

@@ -5,6 +5,9 @@ var routes = [];
 routes.push({
 	url: "/xd",
 	callback: function(req, res){
+		  if(req.session.user){
+      console.log("authorized: ",req.session.user)
+    }
 		res.send("ahaha");
 	}
 });
@@ -19,9 +22,5 @@ routes.push({
     }); 
 	}
 });
-
-
- 
-
 
 module.exports = routes;

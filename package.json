@@ -22,7 +22,12 @@
     "cheerio": "",
     "q": "1.0.1",
      "mongoose": "3.8.8",
-     "node-uuid": ""
+     "node-uuid": "",
+     "body-parser": "",
+     "nodemailer": "",
+     "mongoose-unique-validator": "",
+      "connect-redis": "1.4.x",
+      "connect-mongo" : "0.3.x"
   }, 
   "author": "",
   "license": "ISC"

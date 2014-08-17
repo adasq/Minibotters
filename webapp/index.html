@@ -2,7 +2,7 @@
 <!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-controller="index" ng-app="myApp" class="no-js"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,17 +24,37 @@
 </div>
 <section ng-include src="'views/static/footer.html'"></section>
 
+<br/><br/><br/><br/><br/><br/>
+
 </body>
 
-  <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-  <script src="js/app.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  
+<script src="js/app.js"></script>
 
-   <script src="js/controllers/view1.js"></script>
-   <script src="js/controllers/view2.js"></script>
+<script src="js/controllers/ExampleCtrl.js"></script>
+<script src="js/controllers/Example2Ctrl.js"></script>
+<script src="js/controllers/indexCtrl.js"></script>
+<script src="js/controllers/loginCtrl.js"></script>
+<script src="js/controllers/registerCtrl.js"></script>
+<script src="js/controllers/homeCtrl.js"></script>
+<script src="js/controllers/ListCtrl.js"></script>
 
+<script src="js/directives/AlertDirective.js"></script>
+<script src="js/directives/FormEntityDirective.js"></script>
+<script src="js/directives/FormEntityValidatorDirective.js"></script>
+<script src="js/directives/trooperInputHelperDirective.js"></script>
+
+<script src="js/factories/AlertManagerFactory.js"></script>
+
+<script src="js/services/FormManagerService.js"></script>
+<script src="js/services/RequestHandlerService.js"></script>
+<script src="js/services/AuthService.js"></script>
+<script src="js/services/TrooperService.js"></script>
 
   <script src="bower_components/jquery/dist/jquery.js"></script>
-   <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-   <script type="text/javascript" src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="bower_components/underscore/underscore.js"></script>
 </html>

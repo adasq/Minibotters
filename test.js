@@ -1,5 +1,6 @@
 var request = require('request'),
 _ = require('underscore'),
+nodemailer = require('nodemailer'),
 q = require('q'),
 config = require('./app/config'),
 URLManager = require('./libmb/URLManager'), 
@@ -13,17 +14,37 @@ cheerio = require('cheerio'),
 express = require('express'),
 fs = require('fs'),
 mongoose = require('mongoose'),
+MongoStore = require('connect-mongo')(express);
 routesGET = require('./app/routes/get'),
 routesPOST = require('./app/routes/post'),
 uuid= require('node-uuid'),
 crypto= require('crypto'),
 Utils= require('./app/models/Utils'),
 User= require('./app/models/User'),
+MailManager= require('./app/models/MailManager'),
 i18n = require("i18n"),
+  bodyParser = require('body-parser'),
 db = require('./app/db/connect');
  
 
- 
+
+
+// var mailOptions = {
+//     from: 'Fred Foo ✔ <foo@blurdybloop.com>', // sender address
+//     to: 'asnaebaem@gmail.com', // list of receivers
+//     subject: 'Hello ✔', // Subject line
+//     text: 'Hello world ✔', // plaintext body
+//     html: '<b>Hello world ✔</b>' // html body
+// };
+
+
+// var promise =  MailManager.send(mailOptions);
+// promise.then(function(){
+//     console.log("sent!");
+// }, function(resposne){
+//     console.log("ERR", resposne);
+// });
+
 // var adam = new User({name: "adam3", pass: "wsff"});
 // var promise = adam.save();
 // promise.then(function(result){
@@ -56,7 +77,6 @@ db = require('./app/db/connect');
 
 
 
-
 i18n.configure({
     locales: config.i18n.locales,
     defaultLocale: config.i18n.defaultLocale,
@@ -65,86 +85,42 @@ i18n.configure({
 });
 
 
-
-
-console.log(Trooper.normalizeName("siem aa"))
-console.log(Trooper.normalizeName("siem A(a"))
-var parser = new PageParser();
-
-
-
-// var key = crypto.pbkdf2Sync("wsadze", "salt",25000, 128);
-// console.log(key)
-// var writeToFile = function(b){
-// fs.writeFile("./debug.txt", b, function(err) {
-//     if(err) {
-//         console.log(err);
-//     } else {
-//         console.log("[DEBUG FILE UPDATED]");
-//     }
-// }); 
-// };
-
-// var adam = new User("adam", "wsff");
-// var promise = adam.save();
-// promise.then(function(result){
-//   console.log("success", result);
-// }, function(){
-//   console.log("err");
-// });
-
-// var adam = new User("adam", "wsff");
-// var promise = adam.save();
-// promise.then(function(result){
-//   console.log("success", result);
-// }, function(){
-//   console.log("err");
-// });
-
-
- 
-var promise = User.getUserByName("adam1");
-promise.then(function(adam){
-    if(adam){
-     console.log(adam)
-    }else{
-      console.log("no exists")
-    }
-}, function(){
-  console.log("err db");
-});
-
-
-
+//CONFIG ===========================================
 var app = express(); 
-  // you will need to use cookieParser to expose cookies to req.cookies
   app.use(express.cookieParser()); 
-  // i18n init parses req for language headers, cookies, etc.
   app.use(i18n.init);
-  //urlencoded
+   app.use(bodyParser());
+
+   app.use(express.session({
+  store: new MongoStore({
+    url: "mongodb://localhost/forum"
+  }),
+  secret: '1234567890QWERTY'
+}));
   app.use(express.urlencoded()); 
-  //session handling here...
-  app.use(function(req, res, next) {  
-  next();
-  });
-  //static webapp 
   app.use('/', express.static(__dirname + '/webapp'));
 
-app.listen(config.PORT);
+   app.use(function(req, res, next){
+    console.log("!!!!!!!!!!!!!!");
+      if(req.session.user){
+        next();
+      }else{
+         next();
+      }
+      
+   });
 
-
-
-
+//ROUTES ===========================================
+ 
 _.each(routesGET, function(route){
-  app.get(route.url, route.callback);
+  app.get('/api'+route.url, route.callback);
 });
 _.each(routesPOST, function(route){
   app.post(route.url, route.callback);
 });
 
 
-
-
+app.listen(config.PORT);
 
 
 app.get('/test', function(req, res){ 

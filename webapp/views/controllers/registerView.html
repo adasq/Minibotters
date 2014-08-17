@@ -1,0 +1,21 @@
+<div ng-controller="register">
+
+ 
+<mb-alert></mb-alert> 
+
+
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<form class="form-horizontal" name="form1" role="form">
+<div ng-repeat="form in form.fields">
+	 <mb-form-entity field="form"></mb-form-entity>
+</div>
+<button type="button" class="btn btn-success pull-right" ng-click="form.submit()" ng-disabled="form1.$invalid">Register!</button>
+</form>
+</div>
+</div>
+
+
+
+
+</div>

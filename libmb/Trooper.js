@@ -81,7 +81,8 @@ promiseList.push(promise);
 });
 q.all(promiseList).then(function(pages){
 	_.each(pages, function(trooperArmyMemberPage){
-		 var detalis = parser.getTrooperDetalis(trooperArmyMemberPage);		
+		 var detalis = parser.getTrooperDetalis(trooperArmyMemberPage);	
+				detalis.name = Trooper.normalizeName(detalis.name);
 		 armyMembersList.push(detalis);		 
 	});
 	defer.resolve(armyMembersList);
@@ -90,10 +91,8 @@ q.all(promiseList).then(function(pages){
 return defer.promise;
 };
 //==========================================================
-
 Trooper.prototype.getTrooperSkillList = function(trooperId){
 var parser= new PageParser(), trooper = (trooperId || 0), that= this, defer= q.defer(); 
-
 var promise = this.req.get(this.urlManager.getTrooperUrl(trooper));
 promise.then(function(body){ 
 	var trooperInfo = parser.getTrooperInfo(body);
@@ -101,7 +100,6 @@ promise.then(function(body){
 });
 		return defer.promise;	
 };
-
 //==========================================================
 
 
