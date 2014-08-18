@@ -19,8 +19,7 @@ config(function($stateProvider, $urlRouterProvider) {
 $urlRouterProvider.otherwise("/home");
 
 var routes = [
-{state: 'home', url: '/home', templateUrl: 'views/controllers/homeView.html'},
-//{state: 'lists', url: '/lists', templateUrl: 'views/controllers/ListView.html'},
+{state: 'home', url: '/home', templateUrl: 'views/controllers/homeView.html'},,
 {state: 'register', url: '/register', templateUrl: 'views/controllers/registerView.html'},
 {state: 'login', url: '/login', templateUrl: 'views/controllers/loginView.html'},
 {state: 'example', url: '/example', templateUrl: 'views/controllers/ExampleView.html'},
