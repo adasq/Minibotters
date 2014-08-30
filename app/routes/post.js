@@ -5,7 +5,7 @@ Enums= require('../models/Enums');
 
 
 var routes = [];
-
+//========================================================================================
 routes.push({
 	url: "/register",
 	callback: function(req, res){
@@ -29,7 +29,7 @@ routes.push({
       });
 		}
 });
-
+//========================================================================================
 routes.push({
   url: "/login",
   callback: function(req, res){
@@ -60,7 +60,7 @@ promise.then(function(user){
 });
     }
 });
-
+//========================================================================================
 routes.push({
   url: "/getUser",
   callback: function(req, res){
@@ -81,8 +81,7 @@ routes.push({
     
 }
 });
-
-
+//========================================================================================
 routes.push({
   url: "/generateList",
   callback: function(req, res){
@@ -107,9 +106,8 @@ promise.then(function(armyList){
   res.send({error: false, response: {armyList: armyList}});
 }); 
 });  
-}     
-
+}
 });
-
+//========================================================================================
 
 module.exports = routes;

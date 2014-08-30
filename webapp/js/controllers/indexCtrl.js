@@ -1,27 +1,7 @@
 (function(){
 var index = function($scope, $log, $state, $rootScope, Auth){  
-	//Auth.logout();
 
-
-	$rootScope.$on('$stateChangeStart', 
-	function(event, toState, toParams, fromState, fromParams){ 
-		var isLoggedIn = ($scope.base.auth && $scope.base.auth.loggedIn);
-		var isStateAllowedForUnauthorized = _.contains(['register', 'login', 'home'], toState.name);
-		var isStateAllowedForAuthorized = !_.contains(['register', 'login'], toState.name);
-
-		if(!isLoggedIn){
-			if(!isStateAllowedForUnauthorized){
-				event.preventDefault();
-				$state.go('login');					
-			}
-		}else{
-			if(!isStateAllowedForAuthorized){
-				event.preventDefault();
-				$state.go(fromState.name);		
-			}
-		}
-	});
-
+	var currentState = "";
 
 	$scope.base = {
 		auth: null,
@@ -30,24 +10,53 @@ var index = function($scope, $log, $state, $rootScope, Auth){
 					user: user || undefined,
 					loggedIn: !!user
 				}				
+		}		
+	};
+
+	var handlePossibleRedirection = function(event){
+		var isLoggedIn = $scope.base.auth && $scope.base.auth.loggedIn;
+		var isStateAllowedForUnauthorized = _.contains(['register', 'login', 'home'], currentState);
+		var isStateAllowedForAuthorized = !_.contains(['register', 'login'], currentState);
+		if(!isLoggedIn){
+			if(!isStateAllowedForUnauthorized){
+				event && event.preventDefault();
+				$state.go('login');					
+			}
+		}else{
+			if(!isStateAllowedForAuthorized){
+				event && event.preventDefault();			
+			}
 		}
 	};
 
-	Auth.getUser().then(function(response){
-		$log.log(response);
-		$scope.base.setUser(response.user);
-	}, function(){
-		$scope.base.setUser(null);
+
+	$rootScope.$on('$stateChangeStart', 
+	function(event, toState, toParams, fromState, fromParams){
+		currentState = toState.name;  
+		handlePossibleRedirection(event);		
 	});
+
+	$scope.$watch('base.auth', function(newValue){
+			newValue && handlePossibleRedirection();
+	});
+
+
+	
+
+
+
+Auth.getUser().then(function(response){		
+		$scope.base.setUser(response.user);		
+}, function(){
+		$scope.base.setUser(null);
+});
 
 
 $scope.logout = function(){
 	Auth.logout().then(function(){		
-		$scope.base.setUser(null);
-		
+		$scope.base.setUser(null);		
 	});
-
-}
+};
 
 };
 angular
