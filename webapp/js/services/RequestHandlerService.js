@@ -6,15 +6,13 @@ var RequestHandler = function($http, $log, $q){
 
 		var defer = $q.defer(),
 		successCallback= function(response){
-			if(response.error){
-				$log.log("!!!! ",response.reason.msg);
+			if(response.error){				 
 				defer.reject(response.reason)
 			}else{
 				defer.resolve(response.response);
 			}			
 		},
-		errorCallback= function(response){
-			$log.log("!!!! ",response);
+		errorCallback= function(response){ 
 			defer.reject(response);
 		};
 

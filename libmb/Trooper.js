@@ -118,12 +118,6 @@ promise.then(function(body){
 
 //==========================================================
 
-
-
-
-
-
-
 Trooper.prototype.makeBattle = function(opponent){
 		var that= this, defer= q.defer(); 
 		var data = {

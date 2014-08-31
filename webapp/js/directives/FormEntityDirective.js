@@ -2,19 +2,12 @@
 'use strict'
 var FormEntity = function($http, $compile, $templateCache){
 	var linker = function(scope, element) {
-            // GET template content from path
-
             $http.get("./views/directives/FormEntityView.html").then(function(template){
                 element.html(template.data);
                 $compile(element.contents())(scope);
             });
-
-                
-
-          
         }
-        return {
-            template: '<div>{{field}}</div>',
+        return {            
             restrict: 'E',
             scope: {
                 field:'='

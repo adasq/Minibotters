@@ -54,14 +54,31 @@ db = require('./app/db/connect');
 // });
 
  
-
-// db.User.findOne({name: "adam3"}, function(err, model){
- 
-//      db.User.update( { _id: model._id}, { $set: { "trooperLists.2.troopers" : [{name: "xd", pass:"xd"}] } }, function(err, model){
+// db.User.findOne({name: "yebieoll"}, function(err, model){ 
+//      db.User.update( { _id: model._id}, { $set: { "trooperLists.0" : {troopers: [{name: "xd2", pass:"xd2"}] }} }, function(err, model){
 //       console.log(err, model)
 //      } )
-
 // });
+
+
+
+// db.User.findOne({name: "yebieoll"}, function(err, model){ 
+//      db.User.update( { _id: model._id}, { $set: { "trooperLists.0" : {troopers: [{name: "xd2", pass:"xd2"}] }} }, function(err, model){
+//       console.log(err, model)
+//      } )
+// });
+
+
+
+
+
+// db.User.findOne({name: "yebieoll"}, function(err, model){ 
+//      db.User.update( { _id: model._id}, { $set: { "trooperLists.0.troopers" : [{name: "xd112", pass:"xd112"}] } }, function(err, model){
+//       console.log(err, model)
+//      } )
+// });
+
+
 // promise.then(function(adam){
 //     if(adam){      
 
@@ -100,8 +117,7 @@ var app = express();
   app.use(express.urlencoded()); 
   app.use('/', express.static(__dirname + '/webapp'));
 
-   app.use(function(req, res, next){
-    console.log("!!!!!!!!!!!!!!");
+   app.use(function(req, res, next){  
       if(req.session.user){
         next();
       }else{
@@ -150,7 +166,9 @@ var trooper = new Trooper(trooperConfig);
 var trooperConfig = {
   domain: "com",
   opponent: "nopls",
-  name: "ziemniaki3"};
+  name: "ziemniaki2",
+//pass: "nowehaslo"
+};
 var trooper = new Trooper(trooperConfig);
 
 
@@ -161,10 +179,103 @@ var trooper = new Trooper(trooperConfig);
 // }
 
 
-var promise = trooper.auth();
-promise.then(function(result){
-console.log("[AUTH]", result.code, result.message);
- 
+var generateArmyList = function(trooperConfig){
+  var armyPromise = q.defer();
+  var currentTrooper = new Trooper(trooperConfig); 
+  var promise = currentTrooper.auth();
+  promise.then(function(){        
+        var promise = currentTrooper.getArmyList();
+        promise.then(armyPromise.resolve, armyPromise.reject);  
+  }); 
+  return armyPromise.promise;
+};
+
+var generate = function(trooperConfig){
+  // if(_.isArray(trooperConfig))
+  var deferred = q.defer();
+  var p = generateArmyList(trooperConfig),
+  promises = [];
+  p.then(function(armyList){ 
+        _.each(armyList, function(army){
+          promises.push(generateArmyList({name: army.name, domain: "com",  opponent: "nopls"}));         
+        }); 
+        deferred.resolve(promises);
+  }); 
+  return deferred.promise;
+
+};
+
+
+generate(trooperConfig).then(function(promises){
+console.log(_.isArray(promises))
+q.allSettled(promises).then(function(r){
+    console.log(r);
+})
+})
+
+
+
+
+// function step1() {
+//     var deferred = q.defer();
+//     deferred.resolve("test");
+//     return deferred.promise;
+// }
+
+// function step2(step1Value) {
+//     var deferred = q.defer();
+//     deferred.resolve(step1Value+ "test");
+//     return deferred.promise;
+// }
+
+// function report(step2Value) {
+//     console.log(step2Value);
+//     // implicitly returns undefined, albeit a promise for undefined
+// }
+
+// q.fcall(step1)
+// .then(step2)
+// .then(report)
+// .done();
+
+
+
+
+
+
+
+
+
+
+
+
+// .then(function(a){
+// }); 
+
+// var promise = trooper.auth();
+// promise.then(function(result){
+// console.log("[AUTH]", result.code, result.message);
+//  //============================  YOUR ARMY ======================
+
+// var promise = trooper.getArmyList();
+// promise.then(function(armyList){
+//   _.each(armyList, function(army){     
+//        var trooperX = new Trooper({name: army.name,  domain: "com", opponent: "nopls"});
+//        var promise = trooperX.auth();
+//        promise.then(function(){
+//            var promise = trooperX.getArmyList();
+//            promise.then(function(army2){
+//               console.log(army2);
+//            });
+//        })
+      
+       
+//   });
+
+
+
+// }); 
+
 //============================ PARSE DATA ======================
 //get trooper skills, money and amount needed to upgrade
 // var promise = trooper.getTrooperSkillList(1);
@@ -210,12 +321,6 @@ console.log("[AUTH]", result.code, result.message);
 // });
 
 
-//============================  YOUR ARMY ======================
-
-var promise = trooper.getArmyList();
-promise.then(function(armyList){
-	console.log(armyList);
-}); 
 
 //===============================================================
-});
+//});

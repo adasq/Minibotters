@@ -1,0 +1,30 @@
+<div ng-controller="NewList">
+
+
+<div class="page-header">
+  <h2>Create New List <small>Insert troppers into lists</small></h2>
+</div>
+
+
+<div class="row top-buffer">
+<div class="col-md-12 pull-right">
+
+<form role="form" class="newListForm" name="newListForm">
+<div class="input-group">     
+      <input placeholder="type your new list name" required mb-list-name-validator ng-model="newList.data.name" type="text" class="form-control">
+       <span class="input-group-btn">
+       <button ng-disabled="newListForm.$invalid" ng-click="saveList()" class="btn btn-success" type="button">Save new list</button>
+      </span>
+    </div>
+    
+</form>
+
+</div>
+</div>
+
+<mb-list-manager list="newList.data"></mb-list-manager>
+
+
+
+
+</div>

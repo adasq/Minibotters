@@ -14,6 +14,8 @@ var index = function($scope, $log, $state, $rootScope, Auth){
 	};
 
 	var handlePossibleRedirection = function(event){
+		$log.log(currentState, $scope.base.auth);
+		if(!$scope.base.auth)return;
 		var isLoggedIn = $scope.base.auth && $scope.base.auth.loggedIn;
 		var isStateAllowedForUnauthorized = _.contains(['register', 'login', 'home'], currentState);
 		var isStateAllowedForAuthorized = !_.contains(['register', 'login'], currentState);

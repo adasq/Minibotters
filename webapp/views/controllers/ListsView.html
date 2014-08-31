@@ -1,4 +1,32 @@
-<div>
-<h3>lists view</h3>
-<div ui-view>
+<div ng-controller="Lists">
+<div class="row">
+<div class="col-md-3">
+
+
+<div> &nbsp </div>
+
+
+<h3>Your lists:</h3>
+
+<div ng-if="!lists"> Waiting ... </div>
+<div ng-if="lists" class="list-group">
+  <a href="" ui-sref="lists.show({lid:list.data.name})" ng-repeat="list in lists"  class="list-group-item">
+   <span ng-show="list.data.troopers.length" class="badge">{{list.data.troopers.length}}</span>
+{{list.data.name}} 
+  </a>
+</div>
+
+
+<button ui-sref="lists.new" type="button" class="btn btn-success btn-block">
+<span class="glyphicon glyphicon-plus"></span>
+Create New List!</button>
+
+
+
+</div>
+
+<div class="col-md-9">
+<div ui-view></div>
+</div>
+</div>
 </div>

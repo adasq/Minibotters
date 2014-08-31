@@ -1,0 +1,107 @@
+
+
+<div class="row top-buffer">
+<div class="col-md-12">
+  <div ng-if="selected > 0" class=" btn-group"> 
+  <button type="button" ng-click="deleteSelected()" class="btn btn-default">
+<span class='glyphicon glyphicon-remove'></span> 
+  </button> 
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+     <span class="glyphicon glyphicon-share-alt"></span> 
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="" ng-click="">List1</a></li>
+      <li><a href="" ng-click="">List2</a></li>
+      <li class="divider"></li>
+      <li><a href="" ng-click="">List3</a></li>
+      <li><a href="" ng-click="">List4</a></li>      
+    </ul>
+  </div>
+</div>
+ 
+  <div class="btn-group pull-right">
+  <button type="button" ng-click="handleTrooperSelection(!!!selected)" class="btn btn-default">Select</button>
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+   <ul class="dropdown-menu" role="menu">
+      <li><a href="" ng-click="handleTrooperSelection(true)">All</a></li>
+      <li><a href="" ng-click="handleTrooperSelection(false)">None</a></li>
+      <li class="divider"></li>
+      <li><a href="" ng-click="handleTrooperSelection()">Others</a></li>   
+    </ul>
+</div>
+</div>
+</div>
+
+<div class="row top-buffer">
+<div class="col-md-12">
+<!-- ============================================================================================================= -->
+<div class="input-group">
+  <input placeholder="name;pass" ng-model="newTrooper" name="trooperName" ng-keypress="keyPressed($event)" type="text" class="form-control"/>
+  <div class="input-group-btn">
+  <button type="button" ng-click="addTrooper()" class="btn btn-default">
+<span class="glyphicon glyphicon-plus"></span>
+  </button>
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Opcje
+    <span class="caret"></span>
+    <span class="sr-only">Toggle Dropdown</span>
+  </button>
+   <ul class="dropdown-menu" role="menu">
+      <li><a href="" ng-click="">xd</a></li>
+      <li class="divider"></li>
+      <li><a href="" ng-click="">xd</a></li>
+    </ul>
+  </div>
+</div>
+</div></div>
+
+<div class="row top-buffer">
+<div class="col-md-12">
+<!-- ============================================================================================================= -->
+<div id="xd">
+<!-- style="overflow-y: scroll; max-height:400px;" class="panel panel-default" -->
+<table class="table table-bordered">
+<tr class="active"><td>Name</td><td>Pass</td><td></td></tr>
+<!-- <tr>
+<td class="col-md-3"><input placeholder="new Trooper name" ng-model="newTrooper.name" name="trooperName" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
+<td class="col-md-3"><input placeholder="new Trooper pass" ng-model="newTrooper.pass" name="trooperPass" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
+<td class="col-md-1"> <button ng-click="addTrooper()" type="button" class="btn btn-success">Dodaj</button></td>
+</tr> -->
+<tr ng-show="list.troopers.length === 0"><td colspan="3">
+<p class="text-center"><i>It looks like, your list is empty!</i></p>
+</td></tr>
+<tr ng-show="!list.troopers"><td colspan="3">
+<p class="text-center"><i>Waiting ... </i></p>
+</td></tr>
+
+
+<tr id="trooper-{{trooper.id}}" ng-class="{'selected': trooper.selected, 'selectable': true, 'highlighted': trooper.highlighted}" ng-click="selectTrooper(trooper)"
+ng-repeat-start="trooper in list.troopers">
+<td ng-dblclick="trooper.edited = true" class="col-md-3"> 
+  <span ng-if="!trooper.edited">{{trooper.name}} {{trooper.id}}</span>
+  <span ng-if="trooper.edited"><input placeholder="name" trooper-input-helper="calncelEditindTrooper(trooper)" ng-model="trooper.name" name="trooperPass" type="text" class="form-control"/>
+  </span> 
+</td>
+<td ng-dblclick="trooper.edited2 = true" class="col-md-3"> 
+  <span ng-if="!trooper.edited2">
+    <span ng-if="trooper.pass">{{trooper.pass}}</span>
+    <span ng-if="!trooper.pass"><small><i>no pass</i></small></span>
+  </span>
+  <span ng-if="trooper.edited2"><input placeholder="pass" trooper-input-helper="calncelEditindTrooper(trooper)" ng-model="trooper.pass" type="text" class="form-control"/>
+  </span> 
+</td>
+<td class="col-md-1"> <button type="button" class="btn btn-xs btn-block btn-default" ng-click="removeTrooper(trooper.id)">Delete</button>  </td>
+</tr>
+<tr ng-show="current === trooper.id" ng-repeat-end><td colspan="3">xd</td></tr>
+
+<tr class="active"><td colspan="3">Total troopers: {{list.troopers.length}} ({{selected}} selected).</td></tr>
+
+</table>
+</div></div>
+
+
+</div>

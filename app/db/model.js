@@ -11,8 +11,7 @@ var User = new Schema({
    state	: {type: Number, default: 0},
    deleted 	: {type: Boolean, default: false},
    regDate	: {type: Date, default: new Date()},
-   sessions: [{ type: Schema.Types.ObjectId, ref: 'Session' }],
-   trooperLists : [TrooperList]
+   sessions: [{ type: Schema.Types.ObjectId, ref: 'Session' }]
 });
 
 User.plugin(uniqueValidator);
@@ -47,7 +46,8 @@ exports.Trooper = function(db) {
 };
 //------------------------------------------
 var TrooperList = new Schema({
-   name     : {type: String, required: true},
+  name     : {type: String, required: true},
+  _creator: { type: Schema.Types.ObjectId, ref: 'User' }, 
   troopers : [Trooper]
 });
 
@@ -57,3 +57,5 @@ exports.TrooperList = function(db) {
 };
 //------------------------------------------
 
+
+ 

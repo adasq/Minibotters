@@ -1,8 +1,12 @@
 var db = require('../db/connect'),
 User= require('../models/User'),
+Response= require('../models/Response'),
 Trooper =  require('../../libmb/Trooper'),
 Enums= require('../models/Enums');
 
+
+var SuccessResponse = Response.success;
+var ErrorResponse = Response.error;
 
 var routes = [];
 //========================================================================================
@@ -28,6 +32,88 @@ routes.push({
         res.send({error: true, reason: {msg: msg}});       
       });
 		}
+});
+//========================================================================================
+routes.push({
+  url: "/createList",
+  callback: function(req, res){
+      var post_data = req.body;
+      var newListData = {
+        _creator: req.session.user.data._id,
+        name: post_data.name,
+        troopers: post_data.troopers
+      };
+    db.TrooperList(newListData).save(function(err, model){
+       if(err){
+   res.send(ErrorResponse('creating failed!'));
+  }else{
+   res.send(SuccessResponse({}));
+  }
+      
+    });
+    }
+});
+//========================================================================================
+routes.push({
+  url: "/updateList",
+  callback: function(req, res){
+      var post_data = req.body;
+
+      var listData = {
+        _id: post_data._id,
+        _creator: post_data._creator,
+        name: post_data.name,
+        troopers: post_data.troopers
+      };
+
+db.TrooperList.update({_id: listData._id, _creator: req.session.user.data._id}, {
+          name: post_data.name,
+        troopers: post_data.troopers
+}, function(err, numberAffected, rawResponse) {
+  
+  if(err){
+   res.send(ErrorResponse('updating failed!'));
+  }else{
+   res.send(SuccessResponse({}));
+  }
+});
+
+
+    }
+});
+//========================================================================================
+routes.push({
+  url: "/getList",
+  callback: function(req, res){
+      var post_data = req.body;
+      var listData = {       
+        name: post_data.name,
+        _creator: req.session.user.data._id
+      };
+    db.TrooperList.findOne(listData, function(err, model){
+      if(!err && model){
+        res.send(SuccessResponse(model));
+      }else{
+         res.send(ErrorResponse("problem? :D"));
+      }      
+    });
+    }
+});
+//========================================================================================
+routes.push({
+  url: "/getLists",
+  callback: function(req, res){
+      var listData = {          
+        _creator: req.session.user.data._id
+      };
+    db.TrooperList.find(listData, function(err, model){
+      if(!err && model){
+        res.send(SuccessResponse(model));
+      }else{
+         res.send(ErrorResponse("problem? :D"));
+      }      
+    });
+    }
 });
 //========================================================================================
 routes.push({

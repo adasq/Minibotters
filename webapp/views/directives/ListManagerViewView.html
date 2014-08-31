@@ -1,0 +1,28 @@
+<!-- style="overflow-y: scroll; max-height:400px;" class="panel panel-default" -->
+<table class="table table-bordered">
+<tr class="active"><td>Name</td><td>Pass</td><td></td></tr>
+<!-- <tr>
+<td class="col-md-3"><input placeholder="new Trooper name" ng-model="newTrooper.name" name="trooperName" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
+<td class="col-md-3"><input placeholder="new Trooper pass" ng-model="newTrooper.pass" name="trooperPass" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
+<td class="col-md-1"> <button ng-click="addTrooper()" type="button" class="btn btn-success">Dodaj</button></td>
+</tr> -->
+<tr ng-show="troopers.length === 0"><td colspan="3">
+<p class="text-center"><i>It looks like, your list is empty!</i></p>
+</td></tr>
+<tr ng-show="!troopers"><td colspan="3">
+<p class="text-center"><i>Waiting ... </i></p>
+</td></tr>
+<tr id="trooper-{{trooper.id}}" ng-repeat="trooper in troopers">
+<td class="col-md-3"> 
+  <span>{{trooper.name}}</span>
+ 
+</td>
+<td class="col-md-3">  
+    <span>{{trooper.pass}}</span>
+</td>
+<td class="col-md-1"> <button type="button" class="btn btn-xs btn-block btn-default" ng-click="play()">play</button>  </td>
+</tr>
+
+<tr class="active"><td ng-if="troopers.length !== 0" colspan="3">Total troopers: {{troopers.length}}</td></tr>
+
+</table>
