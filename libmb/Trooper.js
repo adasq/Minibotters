@@ -72,8 +72,8 @@ console.log("Wait for your list...")
 	var armyMembersList=[], promiseList= [], list, promise, that=this, parser= new PageParser(), defer= q.defer();
 
 promise = this.req.get(this.urlManager.getTrooperArmyPageList());
-promise.then(function(body){
-
+promise.then(function(body){	
+(body.length === 3) && defer.reject();	
 list = parser.getTrooperArmyList(body);
 _.each(list, function(trooperId){
 promise = that.req.get(that.urlManager.getTrooperArmyMemberDetalis(trooperId));
@@ -87,7 +87,7 @@ q.all(promiseList).then(function(pages){
 	});
 	defer.resolve(armyMembersList);
 });
-});
+}, defer.reject);
 return defer.promise;
 };
 //==========================================================

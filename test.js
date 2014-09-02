@@ -171,13 +171,7 @@ var trooperConfig = {
 };
 var trooper = new Trooper(trooperConfig);
 
-
-// try{
-// 	trooper.getArmyList();
-// }catch(exception){
-// 	console.log(exception);
-// }
-
+ 
 
 var generateArmyList = function(trooperConfig){
   var armyPromise = q.defer();
@@ -186,34 +180,55 @@ var generateArmyList = function(trooperConfig){
   promise.then(function(){        
         var promise = currentTrooper.getArmyList();
         promise.then(armyPromise.resolve, armyPromise.reject);  
-  }); 
+  }, armyPromise.reject); 
   return armyPromise.promise;
 };
-
-var generate = function(trooperConfig){
-  // if(_.isArray(trooperConfig))
-  var deferred = q.defer();
-  var p = generateArmyList(trooperConfig),
-  promises = [];
+var test = {name: trooperConfig.name, children: []};
+ var list = 0;
+ var troopersFamily = {};
+ var finish = function(){
+  console.log(JSON.stringify(test));
+ };
+var generate = function(trooperConfig, test){
+  ++list;
+  var p = generateArmyList(trooperConfig);  
   p.then(function(armyList){ 
+     --list;
+ if(list === 0){
+  finish();
+ }
         _.each(armyList, function(army){
-          promises.push(generateArmyList({name: army.name, domain: "com",  opponent: "nopls"}));         
-        }); 
-        deferred.resolve(promises);
-  }); 
-  return deferred.promise;
+          var armyObject = {name: army.name, children: [] };      
+          if(troopersFamily[trooperConfig.name]){
+            troopersFamily[trooperConfig.name].push(army.name);
+          }else{
+            troopersFamily[trooperConfig.name]= [army.name];
+          }
+          test.children.push(armyObject);
+          // console.log(army.name +" child of "+trooperConfig.name);          
+          generate({name: army.name, domain: "com",  opponent: "nopls"}, armyObject);
+        });        
+        
+  }, function(){
+    --list; 
+     if(list === 0){
+  finish();
+ }
+  });  
 
 };
 
 
-generate(trooperConfig).then(function(promises){
-console.log(_.isArray(promises))
-q.allSettled(promises).then(function(r){
-    console.log(r);
-})
-})
+generate(trooperConfig, test);
 
 
+// setInterval(function(){
+//   console.log(list)
+//   if(list === 0){
+//     console.log(troopersFamily);
+//     return;
+//   }
+// }, 200)
 
 
 // function step1() {
