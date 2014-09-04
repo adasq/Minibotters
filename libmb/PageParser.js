@@ -13,11 +13,15 @@ var items = $('li.on');
 var skills = [];
 _.each(items, function(val, name){
 	var diva = items[name].attribs.onmouseover;
+	var style = items[name].attribs.style;
+
 	diva= diva.substr(21, diva.length-21-2).replace(/\\\'/g, "'");
 	$ = cheerio.load(diva);
+
 	var title = ( $('.tipcontent h1').text().trim()); 
 	var desc = ( $('.s').text().trim()); 
 	skills.push({
+		style: style,
 		title: title,
 		desc: desc
 	});

@@ -68,7 +68,7 @@ fs.writeFile("./examle.txt", b, function(err) {
 
 //==========================================================
 Trooper.prototype.getArmyList = function(){
-console.log("Wait for your list...")
+//console.log("Wait for your list...")
 	var armyMembersList=[], promiseList= [], list, promise, that=this, parser= new PageParser(), defer= q.defer();
 
 promise = this.req.get(this.urlManager.getTrooperArmyPageList());

@@ -88,9 +88,6 @@ db = require('./app/db/connect');
 // }, function(){
 //   console.log("err db");
 // });
-// db.Trooper.findById("53edc66395cec91c02b88401", function(err, model){
-//   console.log(err, model)
-//  });
 
 
 
@@ -138,29 +135,30 @@ _.each(routesPOST, function(route){
 
 app.listen(config.PORT);
 
+ 
 
-app.get('/test', function(req, res){ 
-  res.cookie(config.i18n.cookieName, 'pl_PL');
-console.log(res.__('hello')); 
 
-console.log(req.headers)
+// app.get('/test', function(req, res){ 
+//   res.cookie(config.i18n.cookieName, 'pl_PL');
+// console.log(res.__('hello')); 
+ 
 
-var trooperConfig = {
-  domain: "com",
-  opponent: "nopls",
-  name: "ziemniaki3"
-};
+// var trooperConfig = {
+//   domain: "com",
+//   opponent: "nopls",
+//   name: "ziemniaki3"
+// };
 
-var trooper = new Trooper(trooperConfig);
+// var trooper = new Trooper(trooperConfig);
   
-	trooper.auth().then(function(result){
-		console.log("[AUTH]", result.code, result.message);
+// 	trooper.auth().then(function(result){
+// 		console.log("[AUTH]", result.code, result.message);
 
-		trooper.getArmyList().then(function(armyList){		 
-			res.send(armyList);
-		});
-	});  
-});
+// 		trooper.getArmyList().then(function(armyList){		 
+// 			res.send(armyList);
+// 		});
+// 	});  
+// });
 
 //===========================================
 var trooperConfig = {
@@ -171,32 +169,48 @@ var trooperConfig = {
 };
 var trooper = new Trooper(trooperConfig);
 
- 
+trooper.auth().then(function(){
+
+  var promise = trooper.getTrooperSkillList(0);
+  promise.then(function(skillList){ 
+    console.log(skillList);
+  });
+
+});
+
+
+ return;
 
 var generateArmyList = function(trooperConfig){
   var armyPromise = q.defer();
   var currentTrooper = new Trooper(trooperConfig); 
   var promise = currentTrooper.auth();
-  promise.then(function(){        
+  promise.then(function(res){  
         var promise = currentTrooper.getArmyList();
         promise.then(armyPromise.resolve, armyPromise.reject);  
-  }, armyPromise.reject); 
+  }, function(){
+    armyPromise.reject('33333333333333333333')
+  }); 
   return armyPromise.promise;
 };
+
 var test = {name: trooperConfig.name, children: []};
  var list = 0;
  var troopersFamily = {};
  var finish = function(){
   console.log(JSON.stringify(test));
  };
+
+
 var generate = function(trooperConfig, test){
-  ++list;
+  //++list;
   var p = generateArmyList(trooperConfig);  
-  p.then(function(armyList){ 
-     --list;
- if(list === 0){
-  finish();
- }
+  p.then(function(armyList){
+     // --list;
+ // if(list === 1){
+ //  finish();
+ // }
+        list+=armyList.length;
         _.each(armyList, function(army){
           var armyObject = {name: army.name, children: [] };      
           if(troopersFamily[trooperConfig.name]){
@@ -210,48 +224,17 @@ var generate = function(trooperConfig, test){
         });        
         
   }, function(){
-    --list; 
-     if(list === 0){
-  finish();
- }
+     //--list; 
+ //     if(list === 1){
+ //  finish();
+ // }
   });  
 
 };
 
 
-generate(trooperConfig, test);
+// generate(trooperConfig, test);
 
-
-// setInterval(function(){
-//   console.log(list)
-//   if(list === 0){
-//     console.log(troopersFamily);
-//     return;
-//   }
-// }, 200)
-
-
-// function step1() {
-//     var deferred = q.defer();
-//     deferred.resolve("test");
-//     return deferred.promise;
-// }
-
-// function step2(step1Value) {
-//     var deferred = q.defer();
-//     deferred.resolve(step1Value+ "test");
-//     return deferred.promise;
-// }
-
-// function report(step2Value) {
-//     console.log(step2Value);
-//     // implicitly returns undefined, albeit a promise for undefined
-// }
-
-// q.fcall(step1)
-// .then(step2)
-// .then(report)
-// .done();
 
 
 

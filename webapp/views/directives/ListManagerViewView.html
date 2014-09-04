@@ -1,6 +1,6 @@
 <!-- style="overflow-y: scroll; max-height:400px;" class="panel panel-default" -->
 <table class="table table-bordered">
-<tr class="active"><td>Name</td><td>Pass</td><td></td></tr>
+<tr class="danger"><td>Name</td><td>Pass</td><td></td></tr>
 <!-- <tr>
 <td class="col-md-3"><input placeholder="new Trooper name" ng-model="newTrooper.name" name="trooperName" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
 <td class="col-md-3"><input placeholder="new Trooper pass" ng-model="newTrooper.pass" name="trooperPass" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
@@ -10,9 +10,11 @@
 <p class="text-center"><i>It looks like, your list is empty!</i></p>
 </td></tr>
 <tr ng-show="!troopers"><td colspan="3">
-<p class="text-center"><i>Waiting ... </i></p>
+<p class="text-center"><i>Waiting...</i></p>
 </td></tr>
-<tr id="trooper-{{trooper.id}}" ng-repeat="trooper in troopers">
+<tr ng-click="selectTrooper(trooper)" id="trooper-{{trooper.id}}" 
+ng-class="{'active': trooper.ui.selected}"
+ng-repeat-start="trooper in troopers | trooper.ui.state:reverse">
 <td class="col-md-3"> 
   <span>{{trooper.name}}</span>
  
@@ -20,8 +22,22 @@
 <td class="col-md-3">  
     <span>{{trooper.pass}}</span>
 </td>
-<td class="col-md-1"> <button type="button" class="btn btn-xs btn-block btn-default" ng-click="play()">play</button>  </td>
+<td class="col-md-1"> 
+
+<button ng-show="trooper.ui.state !== state.PLAYED" type="button" 
+	ng-disabled="trooper.ui.state === state.IN_PROGRESS"class="btn btn-xs btn-block btn-default" ng-click="play(trooper)">
+	<span ng-show="trooper.ui.state === state.IN_PROGRESS">wait ...</span>
+	<span ng-show="trooper.ui.state === state.DEFAULT">play</span>
+</button>  
+	<span ng-show="trooper.ui.state === state.PLAYED">+{{trooper.money}}
+	</span>
+
+</td>
 </tr>
+<tr ng-show="trooper.ui.selected && trooper.ui.state === state.PLAYED" ng-repeat-end><td colspan="3">  
+    <span class="skill-view" style="{{skill.style}}" ng-repeat="skill in trooper.skills"></span>
+   <!--  {{skill.title}} -->
+</td></tr>
 
 <tr class="active"><td ng-if="troopers.length !== 0" colspan="3">Total troopers: {{troopers.length}}</td></tr>
 

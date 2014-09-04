@@ -20,6 +20,9 @@ TrooperListModel.getLists().then(function(lists){
 });
 
 
+Trooper.play({tname: 'ziemniaki2', lname:'asdasd'});
+
+
 };
 angular
 .module("controllers")

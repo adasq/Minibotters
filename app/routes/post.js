@@ -1,5 +1,7 @@
 var db = require('../db/connect'),
 User= require('../models/User'),
+_ = require('underscore'),
+q = require('q'),
 Response= require('../models/Response'),
 Trooper =  require('../../libmb/Trooper'),
 Enums= require('../models/Enums');
@@ -73,7 +75,8 @@ db.TrooperList.update({_id: listData._id, _creator: req.session.user.data._id}, 
   
   if(err){
    res.send(ErrorResponse('updating failed!'));
-  }else{
+  }else{ 
+   req.session.lists[listData.name] = listData;
    res.send(SuccessResponse({}));
   }
 });
@@ -90,13 +93,80 @@ routes.push({
         name: post_data.name,
         _creator: req.session.user.data._id
       };
-    db.TrooperList.findOne(listData, function(err, model){
-      if(!err && model){
-        res.send(SuccessResponse(model));
+   console.log(req.session.lists );
+      req.session.lists = req.session.lists || {};
+          
+     
+
+      if(req.session.lists[listData.name]){
+        console.log(req.session.lists[listData.name]);
+          res.send(SuccessResponse(req.session.lists[listData.name]));
+      }else{
+
+        db.TrooperList.findOne(listData, function(err, model){
+      if(!err && model){ 
+        req.session.lists[listData.name]= model;
+        res.send(SuccessResponse(model));       
+
       }else{
          res.send(ErrorResponse("problem? :D"));
       }      
     });
+
+      } 
+
+    }
+});
+//========================================================================================
+routes.push({
+  url: "/play",
+  callback: function(req, res){
+      var post_data = req.body;
+        
+      var listName= post_data.lname;
+      var trooperId= post_data.tid;
+   
+      req.session.lists = req.session.lists || {};
+      if(req.session.lists[listName]){
+         console.log(req.session.lists[listName]);
+         var list = req.session.lists[listName];
+         var trooper= _.find(list.troopers, function(trooper){
+            return trooper._id == trooperId;
+         }); 
+
+        var trooperConfig = {
+          domain: "com",
+          opponent: "nopls",
+          name: trooper.name
+        };
+        trooper.pass && (trooperConfig.pass= trooper.pass)
+
+        var trooper = new Trooper(trooperConfig);  
+         trooper.auth().then(function(result){ 
+           if(result.code === 201){
+            // var promises = [
+            //     trooper.makeBattles(), 
+            //     trooper.makeMissions(),
+            //     trooper.makeRaids()];
+
+            //     q.all(promises).then(function(respnse){
+            //       console.log(respnse);
+            //     });
+         var promise = trooper.getTrooperSkillList(0);
+          promise.then(function(skillList){  
+             res.send(SuccessResponse(skillList));
+          });
+
+           }
+        });
+
+
+      }else{
+        console.log('lipa')
+      }   
+     // res.send(req.session.lists[listData.name]);
+ 
+
     }
 });
 //========================================================================================

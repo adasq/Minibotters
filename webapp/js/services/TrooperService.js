@@ -5,6 +5,10 @@ var Trooper = function(RequestHandler){
 		return RequestHandler.send("generateList", data);	
 	};
 
+	this.play = function(data){
+		return RequestHandler.send("play", data);	
+	};
+
 };
 angular
 .module("services")
