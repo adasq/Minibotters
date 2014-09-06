@@ -7,6 +7,7 @@ var Response = require('./Response');
 
 module.exports = function(){
 	var j= request.jar();
+	this.jar =j;
 	this.send = function(url){
 			var defer= q.defer(); 			
 			request({uri: url, jar: j, followRedirect: false}, function(e,r,b){

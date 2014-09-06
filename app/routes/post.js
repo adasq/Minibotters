@@ -93,25 +93,21 @@ routes.push({
         name: post_data.name,
         _creator: req.session.user.data._id
       };
-   console.log(req.session.lists );
-      req.session.lists = req.session.lists || {};
-          
-     
 
-      if(req.session.lists[listData.name]){
-        console.log(req.session.lists[listData.name]);
-          res.send(SuccessResponse(req.session.lists[listData.name]));
+      req.session.lists = req.session.lists || {};          
+  
+      if(req.session.lists[listData.name+"z"]){
+        res.send(SuccessResponse(req.session.lists[listData.name]));
       }else{
-
         db.TrooperList.findOne(listData, function(err, model){
-      if(!err && model){ 
-        req.session.lists[listData.name]= model;
+      if(!err && model){        
+        req.session.lists[listData.name]= model; 
         res.send(SuccessResponse(model));       
 
       }else{
          res.send(ErrorResponse("problem? :D"));
       }      
-    });
+      });
 
       } 
 
@@ -126,9 +122,8 @@ routes.push({
       var listName= post_data.lname;
       var trooperId= post_data.tid;
    
-      req.session.lists = req.session.lists || {};
+      req.session.lists = req.session.lists || {};     
       if(req.session.lists[listName]){
-         console.log(req.session.lists[listName]);
          var list = req.session.lists[listName];
          var trooper= _.find(list.troopers, function(trooper){
             return trooper._id == trooperId;
@@ -142,27 +137,47 @@ routes.push({
         trooper.pass && (trooperConfig.pass= trooper.pass)
 
         var trooper = new Trooper(trooperConfig);  
-         trooper.auth().then(function(result){ 
+         trooper.auth().then(function(result){
            if(result.code === 201){
-            // var promises = [
-            //     trooper.makeBattles(), 
-            //     trooper.makeMissions(),
-            //     trooper.makeRaids()];
+            var fightPromises = [trooper.makeBattles(), 
+                trooper.makeMissions(),
+                trooper.makeRaids()];
+                var fightPromise = q.all(fightPromises);
+                fightPromise.then(function(fightResponse){ 
+                    var promise = trooper.getTrooperSkillList(0);
+                    promise.then(function(skillList){                     
+                    //-----------------------------------------
+                    var promise = trooper.upgrade(0);
+                    promise.then(function(result){
+                     if(result === 501){
+                      console.log('upgrade availavle')
+                         var promise = trooper.getTrooperUpgradeSkillList(0);
+                         promise.then(function(upgradeSkillList){ 
+                         res.send(SuccessResponse({fight: fightResponse, skills: skillList, upgrade: upgradeSkillList}));
+                        });
+                     }else{
+                        console.log('upgrade NOT availavle')
+                      res.send(SuccessResponse({fight: fightResponse, skills: skillList}));
+                     }
+                     
+                    
+                    });
+                  //-----------------------------------------------------
+                  });
 
-            //     q.all(promises).then(function(respnse){
-            //       console.log(respnse);
-            //     });
-         var promise = trooper.getTrooperSkillList(0);
-          promise.then(function(skillList){  
-             res.send(SuccessResponse(skillList));
-          });
 
+
+                });
+        
+
+           }else{
+            SuccessResponse(ErrorResponse('wrong auth data'))
            }
         });
 
 
       }else{
-        console.log('lipa')
+        console.log('lipa2')
       }   
      // res.send(req.session.lists[listData.name]);
  

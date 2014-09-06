@@ -27,12 +27,23 @@ var TrooperListModel = function($log, $q, TrooperList){
 		}, deffered.reject);
 		return deffered.promise;
 	};
-
+	TrooperListModel.prototype.getNormalizedData = function(){
+		var normalizedData = {};
+		normalizedData._creator = this.data._creator;
+		normalizedData._id = this.data._id;
+		normalizedData.name = this.data.name;
+		normalizedData.troopers = [];
+		_.each(this.data.troopers, function(trooper){
+			normalizedData.troopers.push({name: trooper.name, pass: trooper.pass, _id: trooper._id});
+		});
+		return normalizedData;
+	
+	}
 	TrooperListModel.prototype.save = function(){
 		var deffered = $q.defer(); 
 		if(this.data._id){
 			//update
-			var promise = TrooperList.updateList(this.data);
+			var promise = TrooperList.updateList(this.getNormalizedData());
 			promise.then(function(response){
 				response.error?deffered.reject(response.reason):deffered.resolve();				
 			}, function(){
@@ -41,8 +52,7 @@ var TrooperListModel = function($log, $q, TrooperList){
 		}else{
 			//save
 			var promise = TrooperList.createList(this.data);
-			promise.then(function(response){
-				 
+			promise.then(function(response){				 
 				response.error?deffered.reject(response.reason):deffered.resolve();	
 			}, function(){
 				deffered.reject('unhandled!');

@@ -164,19 +164,47 @@ app.listen(config.PORT);
 var trooperConfig = {
   domain: "com",
   opponent: "nopls",
-  name: "ziemniaki2",
-//pass: "nowehaslo"
+  name: "aaaa",
+//  pass: "nowehaslo"
 };
 var trooper = new Trooper(trooperConfig);
 
-trooper.auth().then(function(){
+trooper.auth().then(function(resposne){
+//
+  // var promise = trooper.getTrooperSkillList(0);
+  // promise.then(function(skillList){ 
+  //   console.log(skillList);
+  // });
 
-  var promise = trooper.getTrooperSkillList(0);
-  promise.then(function(skillList){ 
-    console.log(skillList);
-  });
+var promise = trooper.upgrade(1);
+promise.then(function(result){
+ console.log(result,  CookieMessages.upgrade[result]);
+
+var promise = trooper.getTrooperUpgradeSkillList(1);
+promise.then(function(skillList){ 
+ console.log(skillList);
+});
+
 
 });
+
+
+// var startDate = +new Date();
+// setInterval(function(){
+//   var promise = trooper.getTrooperSkillList(0);
+//   promise.then(function(skillList){ 
+//     console.log(_.pluck(skillList.skills, 'title'));
+//     var secs = ((+new Date()) - startDate)/1000;
+    
+//     console.log(secs);
+//   });
+ 
+// }, 5*1000);
+
+});
+
+
+
 
 
  return;

@@ -7,7 +7,10 @@ var ListManagerView = function($log, Trooper){
                 IN_PROGRESS: 1,
                 PLAYED: 2
             };
-
+            scope.showHeadQuarters = function(trooper){
+                var url = 'http://'+trooper.name+'.minitroopers.com/hq';
+                $log.log(url)
+            };
             var selectTrooperById = function(tid){
                 _.each(scope.troopers, function(trooper){
                     trooper.ui.selected = (trooper.ui.selected?false:(trooper._id === tid));
@@ -18,7 +21,7 @@ var ListManagerView = function($log, Trooper){
             };
 
             scope.$watch('troopers', function(nv){
-            	 
+            	 $log.log(nv)
                 if(nv){
                     _.each(scope.troopers, function(trooper){
                         trooper.ui = {
@@ -30,20 +33,28 @@ var ListManagerView = function($log, Trooper){
             });
             scope.play = function(trooper){  
                 trooper.ui.state = scope.state.IN_PROGRESS;    
-                Trooper.play({tid: trooper._id, lname: 'asdasd'}).then(function(response){
-                    $log.log(response);
+                Trooper.play({tid: trooper._id, lname: attr.lname}).then(function(response){                   
                     trooper.ui.state = scope.state.PLAYED;
-                    //infoViewVisible
-                    trooper.skills = response.skills,
-                    trooper.money = response.money
-
-                })
+                    $log.log(response)
+                    var troopeFights= response.fight;
+                    var trooperInfo = response.skills;
+                    trooper.fights = {
+                        battle: troopeFights[0],
+                        mission: troopeFights[1],
+                        raid: troopeFights[2],
+                    };
+                    trooper.upgradeSkills = response.upgrade;
+      
+                    trooper.skills = trooperInfo.skills;
+                    trooper.needToUpgrade = trooperInfo.needToUpgrade;
+                    trooper.money = trooperInfo.money;
+                });
             }
         };
         return {
             link: link,
             scope: {
-            	troopers: "="
+            	troopers: "="                
             },
             restrict: "E",
             templateUrl: "views/directives/ListManagerViewView.html"

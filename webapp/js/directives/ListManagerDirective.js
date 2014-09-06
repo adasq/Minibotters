@@ -5,14 +5,14 @@ var ListManager = function($log, $state, $location, $anchorScroll, Trooper){
 //==========================================================================
 
 $scope.current= null;
-
 $scope.selected = 0;
+var TROOPER_ID = 0;
 $scope.updateSelected = function(){
 	$scope.selected= _.filter($scope.list.troopers, function(trooper){return trooper.selected;}).length;
 };
 
 $scope.handleTrooperSelection = function(action){
-	$log.log(action)
+ 
 	if(_.isBoolean(action)){
 		_.each($scope.list.troopers, function(trooper){
 			trooper.selected = action;
@@ -48,18 +48,14 @@ $scope.addTrooper = function(){
 _.each($scope.list.troopers, function(trooper){
 	trooper.highlighted=false;
 });
-var id = $scope.list.troopers.length;
-	$log.log($scope.newTrooper);
-	var splited = $scope.newTrooper.split(';');
 
+	var splited = $scope.newTrooper.split(';');
 	$scope.list.troopers.unshift({
 	name: splited[0],
 	pass: splited[1] || "",
+	id: ++TROOPER_ID,
 	highlighted: true
-});
-
-	 $location.hash('trooper-'+id);
-      $anchorScroll();
+});	
 	$scope.newTrooper = "";
 };
 
@@ -70,9 +66,19 @@ $scope.keyPressed = function(event){
 }
 
 $scope.removeTrooper = function(id){
+	console.log($scope.list.troopers, id)
+
 	$scope.list.troopers = _.without($scope.list.troopers, _.findWhere($scope.list.troopers, {id: id}));
 	$scope.updateSelected();
 };
+
+$scope.$watch('list', function(nv){
+	if($scope.list && $scope.list.troopers){
+		_.each($scope.list.troopers, function(trooper){
+			trooper.id = ++TROOPER_ID;
+		});
+	}
+});
 
 
 //==========================================================================

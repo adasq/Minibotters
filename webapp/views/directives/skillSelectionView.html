@@ -1,0 +1,35 @@
+<!-- <div class="list-group">
+  <a ng-repeat="skill in skills" href="#" class="list-group-item disabled">
+   <span class="skill-view" style="{{skill.style}}"></span> <h3>{{skill.name}}<small>{{skill.description}}</small></h3>
+  </a>
+</div>
+ -->
+
+<div ng-show="currentState === state.IN_PROGRESS" class="text-center">
+<h4>Waiting ... </h4>
+</div>
+
+<div ng-show="currentState === state.SUCCESS" class="text-center">
+<h4>{{selectedSkill.name}} <small>successfully selected</small></h4>
+</div>
+
+<div ng-show="currentState === state.DEFAULT" class="list-group">
+  <a ng-repeat="skill in skills" ng-click="selectSkill(skill)" href="" class="list-group-item">
+  	 <span class="skill-view" style="{{skill.style}}"></span>
+    <h5 class="list-group-item-heading"><strong>{{skill.name}}</strong></h5>
+    <p class="list-group-item-text"> <small><em>{{skill.description}}</em></small></p>
+  </a>
+</div>
+
+<!-- <ul class="media-list list-group">
+  <a ng-repeat="skill in skills" class="list-group-item media">
+    <a class="pull-left">
+       <img class="media-object" src="..." alt="...">
+      <span class="skill-view" style="{{skill.style}}"></span>
+    </a>
+    <div class="media-body">
+      <h5 class="media-heading"><strong>{{skill.name}}</strong></h5>
+      <small><em>{{skill.description}}</em></small>  
+    </div>
+  </a>
+</ul> -->
