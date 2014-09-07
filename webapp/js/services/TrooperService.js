@@ -8,6 +8,9 @@ var Trooper = function(RequestHandler){
 	this.play = function(data){
 		return RequestHandler.send("play", data);	
 	};
+	this.chooseSkill = function(data){
+		return RequestHandler.send("chooseSkill", data);	
+	};
 
 };
 angular

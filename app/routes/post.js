@@ -4,6 +4,7 @@ _ = require('underscore'),
 q = require('q'),
 Response= require('../models/Response'),
 Trooper =  require('../../libmb/Trooper'),
+CookieMessages =  require('../../libmb/CookieMessages'),
 Enums= require('../models/Enums');
 
 
@@ -70,13 +71,12 @@ routes.push({
 
 db.TrooperList.update({_id: listData._id, _creator: req.session.user.data._id}, {
           name: post_data.name,
-        troopers: post_data.troopers
-}, function(err, numberAffected, rawResponse) {
-  
+          troopers: post_data.troopers
+}, function(err, numberAffected, rawResponse) {  
   if(err){
    res.send(ErrorResponse('updating failed!'));
   }else{ 
-   req.session.lists[listData.name] = listData;
+   delete req.session.lists[listData.name];
    res.send(SuccessResponse({}));
   }
 });
@@ -96,7 +96,7 @@ routes.push({
 
       req.session.lists = req.session.lists || {};          
   
-      if(req.session.lists[listData.name+"z"]){
+      if(req.session.lists[listData.name]){
         res.send(SuccessResponse(req.session.lists[listData.name]));
       }else{
         db.TrooperList.findOne(listData, function(err, model){
@@ -186,6 +186,56 @@ routes.push({
 });
 //========================================================================================
 routes.push({
+  url: "/chooseSkill",
+  callback: function(req, res){
+      var post_data = req.body;        
+      var listName= post_data.lname;
+      var trooperId= post_data.tid;
+      var skillId= +post_data.skillId;
+   
+      req.session.lists = req.session.lists || {};     
+      if(req.session.lists[listName]){
+         var list = req.session.lists[listName];
+         var trooper= _.find(list.troopers, function(trooper){
+            return trooper._id == trooperId;
+         }); 
+
+        var trooperConfig = {
+          domain: "com",
+          opponent: "nopls",
+          name: trooper.name
+        };
+        trooper.pass && (trooperConfig.pass= trooper.pass)
+
+        var trooper = new Trooper(trooperConfig);  
+         trooper.auth().then(function(result){
+           if(result.code === 201){         
+              var promise = trooper.selectSkill(0, skillId);
+              promise.then(function(result){                
+                if(result === '*'){                     
+                    res.send(SuccessResponse({result:result}));
+                }else{
+                  console.log("nie wchodzi")
+                    res.send(ErrorResponse(CookieMessages.skillSelection[result]));
+                } 
+              });
+
+           }else{
+            res.send(ErrorResponse('wrong auth data'));
+           }
+        });
+
+
+      }else{
+        res.send(ErrorResponse('LIPA'));
+      }   
+     // res.send(req.session.lists[listData.name]);
+ 
+
+    }
+});
+//========================================================================================
+routes.push({
   url: "/getLists",
   callback: function(req, res){
       var listData = {          
@@ -255,13 +305,10 @@ routes.push({
 //========================================================================================
 routes.push({
   url: "/generateList",
-  callback: function(req, res){
-
-   
+  callback: function(req, res){   
       var post_data = req.body;
-
-var name = post_data.name;
-var pass = post_data.pass;
+      var name = post_data.name;
+      var pass = post_data.pass;
 var trooperConfig = {
   domain: "com",
   opponent: "nopls",

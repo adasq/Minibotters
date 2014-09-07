@@ -10,9 +10,10 @@ var skillSelection = function($log, $timeout){
             	IN_PROGRESS: 1,
             	SUCCESS: 2,
             	ERROR: 3
-            };
-            scope.currentState = state.DEFAULT;
-
+            },
+            ERROR_MSG_TIMEOUT = 2000,
+            onSkillSelection = scope.onSkillSelection();
+          
 
     //         scope.skills2 = [{ style: 'background : url(\'/img/skills.png\') -210px -90px',
     // skillId: '67',
@@ -23,22 +24,33 @@ var skillSelection = function($log, $timeout){
     // name: 'Toxic shells',
     // description: 'Snaps fires up to 3 toxic shells which poison the enemy. "You look a little off-colour there Roger. Are you sure you don\'t need a little liedown? "' }];
 
-
+ 
       scope.selectSkill = function(skill){
-      	$log.log(skill)
-      	scope.currentState = state.IN_PROGRESS;
-      	$timeout(function(){
-      		scope.selectedSkill = skill;
-      		scope.currentState = state.SUCCESS;
-      	}, 1000);
+        scope.currentState = state.IN_PROGRESS;
+        var promise = onSkillSelection(skill);
+        promise.then(function(result){
+            scope.result = result;
+            scope.currentState = state.SUCCESS;
+        }, function(result){
+            scope.result = result;
+            scope.currentState = state.ERROR;
+            $timeout(function(){
+                scope.currentState = state.DEFAULT;
+            }, ERROR_MSG_TIMEOUT)
+        });       
       }
+
+      scope.$watch('skills', function(){
+      	$log.log('skills: ',scope.skills);
+      	 scope.currentState = state.DEFAULT;
+      });
 
         };
         return {
             link: link,
             scope: {
             	skills: "=",
-            	callback: "="
+            	onSkillSelection: "&"
             },
             restrict: "E",
             templateUrl: "views/directives/skillSelectionView.html"

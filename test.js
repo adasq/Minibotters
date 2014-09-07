@@ -167,26 +167,26 @@ var trooperConfig = {
   name: "aaaa",
 //  pass: "nowehaslo"
 };
-var trooper = new Trooper(trooperConfig);
 
-trooper.auth().then(function(resposne){
+var trooper = new Trooper(trooperConfig);
+//trooper.auth().then(function(resposne){
 //
   // var promise = trooper.getTrooperSkillList(0);
   // promise.then(function(skillList){ 
   //   console.log(skillList);
   // });
 
-var promise = trooper.upgrade(1);
-promise.then(function(result){
- console.log(result,  CookieMessages.upgrade[result]);
+// var promise = trooper.upgrade(1);
+// promise.then(function(result){
+//  console.log(result,  CookieMessages.upgrade[result]);
 
-var promise = trooper.getTrooperUpgradeSkillList(1);
-promise.then(function(skillList){ 
- console.log(skillList);
-});
+// var promise = trooper.getTrooperUpgradeSkillList(1);
+// promise.then(function(skillList){ 
+//  console.log(skillList);
+// });
 
 
-});
+// });
 
 
 // var startDate = +new Date();
@@ -200,9 +200,7 @@ promise.then(function(skillList){
 //   });
  
 // }, 5*1000);
-
-});
-
+//});
 
 
 

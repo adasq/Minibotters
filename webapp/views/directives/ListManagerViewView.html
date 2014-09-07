@@ -1,82 +1,74 @@
 <!-- style="overflow-y: scroll; max-height:400px;" class="panel panel-default" -->
-<table class="table table-bordered">
-<tr class="danger"><td class="col-md-2">Name</td><td class="col-md-3">Battle</td><td class="col-md-3">Mission</td><td class="col-md-3">Raid</td><td class="col-md-1"></td></tr>
-<!-- <tr>
-<td class="col-md-3"><input placeholder="new Trooper name" ng-model="newTrooper.name" name="trooperName" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
-<td class="col-md-3"><input placeholder="new Trooper pass" ng-model="newTrooper.pass" name="trooperPass" ng-keypress="keyPressed($event)" type="text" class="form-control"/></td>
-<td class="col-md-1"> <button ng-click="addTrooper()" type="button" class="btn btn-success">Dodaj</button></td>
-</tr> -->
-<tr ng-show="troopers.length === 0"><td colspan="3">
+<div class="panel panel-default">
+<table class="panel-body table table-bordered">
+<tr class="dange2r"><td class="col-md-2">Name</td><td class="col-md-3">Battle</td><td class="col-md-3">Mission</td><td class="col-md-3">Raid</td><td class="col-md-1"></td></tr>
+
+<tr ng-show="troopers.length === 0"><td colspan="5">
 <p class="text-center"><i>It looks like, your list is empty!</i></p>
 </td></tr>
-<tr ng-show="!troopers"><td colspan="3">
+<tr ng-show="!troopers"><td colspan="5">
 <p class="text-center"><i>Waiting...</i></p>
 </td></tr>
 <tr id="trooper-{{trooper.id}}" 
 ng-class="{'active': trooper.ui.selected}"
-ng-repeat-start="trooper in troopers">
-<td ng-click="selectTrooper(trooper)" class="col-md-2"> 
-  	<span>{{trooper.name}}</span> 
+ng-repeat-start="trooper in troopers | orderBy:'upgradeSkills'">
+<td class="col-md-2"> 
+  	<span><a target="_blank" href="http://{{trooper.name}}.minitroopers.com/hq">{{trooper.name}}</span> 
 </td>
-<td ng-click="selectTrooper(trooper)" class="col-md-3">  
+<td ng-click="selectTrooper(trooper)" class="col-md-2">  
     <span>{{trooper.fights.battle}}</span>
 </td>
-<td ng-click="selectTrooper(trooper)" class="col-md-3">  
+<td ng-click="selectTrooper(trooper)" class="col-md-2">  
     <span>{{trooper.fights.mission}}</span>
 </td>
-<td ng-click="selectTrooper(trooper)" class="col-md-3">  
+<td ng-click="selectTrooper(trooper)" class="col-md-2">  
     <span>{{trooper.fights.raid}}</span>
 </td>
-<td class="col-md-1"> 
-
-<button type="button" 
-	ng-disabled="trooper.ui.state === state.IN_PROGRESS"class="btn btn-xs btn-block btn-default" ng-click="play(trooper)">
+<td class="col-md-4"> 
+<button ng-show="!trooper.upgradeSkills" type="button" 
+	ng-disabled="trooper.ui.state === state.IN_PROGRESS" class="btn btn-xs btn-block btn-default col-md-3" ng-click="play(trooper)">
 	<span ng-show="trooper.ui.state === state.IN_PROGRESS">wait ...</span>
 	<span ng-show="trooper.ui.state !== state.IN_PROGRESS">play</span>
-</button>  
+</button>
+<button type="button" ng-show="trooper.upgradeSkills" disabled
+	class="btn btn-xs btn-block btn-success">
+	<span>upgrade available</span>
+	<span ng-show="1 !== 1">play</span>
+</button>
+
 	<!-- <span ng-show="trooper.ui.state === state.PLAYED">+{{trooper.money}}
 	</span> -->
 
 </td>
 </tr>
-<tr ng-show="trooper.ui.selected" ng-repeat-end>
+<tr ng-show="trooper.ui.selected && trooper.ui.state === state.PLAYED" ng-repeat-end>
 <td class="col-md-12" colspan="5"> 
 
-		<div class="row"><div class="col-md-12">
-			<div class="pull-right">
-<button ng-click="showHeadQuarters(trooper)" type="button" class="btn btn-default"><span class="glyphicon glyphicon-share-alt"></span></button>
-			</div>
-		</div></div>
-
-		<div class="row">&nbsp</div>
-
 		<div class="row">
-			<div class="col-md-12">
-		
-<!-- 		<div class="panel panel-default">
-				  <div class="panel-body">
-
-				  </div>
-		</div>	 -->	
-
-
-<mb-skill-selection ng-if="trooper.upgradeSkills" skills="trooper.upgradeSkills"></mb-skill-selection>
-	  
-
+			<div class="col-md-12">		
+		<mb-skill-selection ng-if="trooper.upgradeSkills" on-skill-selection="onSkillSelection(trooper)" skills="trooper.upgradeSkills"></mb-skill-selection>	  
 			</div>
 		</div>
-		<div ng-show="trooper.ui.state === state.PLAYED" class="row">
+		<div ng-show="trooper.needToUpgrade > 0" class="row">
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				  <div class="panel-body">
-				money: {{trooper.money}}
-				needToUpgrade: {{trooper.needToUpgrade}}
+				
+				
+ <dl class="dl-horizontal">
+  <dt><small class="text-muted">money:</small></dt>
+  <dd><h1>{{trooper.money}}</h1></dd>
+   <dt><small class="text-muted">next upgrade:</small></dt>
+  <dd><h1>{{trooper.needToUpgrade}}</h1></dd>
+</dl>
+
+ 
 				</div></div>
 			</div>
 			<div class="col-md-6">			
 			<div class="panel panel-default">
 				  <div class="panel-body">
-				   <span class="skill-view" style="{{skill.style}}" ng-repeat="skill in trooper.skills"></span>
+				   <span popover="{{skill.desc}}" popover-title="{{skill.title}}" popover-trigger="mouseenter" class="skill-view" style="{{skill.style}}" ng-repeat="skill in trooper.skills"></span>
 				  </div>
 				</div>
 			</div>			
@@ -88,3 +80,4 @@ ng-repeat-start="trooper in troopers">
 <tr class="active"><td ng-if="troopers.length !== 0" colspan="5">Total troopers: {{troopers.length}}</td></tr>
 
 </table>
+  </div> 
