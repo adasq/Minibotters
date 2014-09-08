@@ -72,10 +72,15 @@ Trooper.prototype.getArmyList = function(){
 	var armyMembersList=[], promiseList= [], list, promise, that=this, parser= new PageParser(), defer= q.defer();
 
 promise = this.req.get(this.urlManager.getTrooperArmyPageList());
-promise.then(function(body){	
-(body.length === 3) && defer.reject();	
+promise.then(function(body){
+(body.length === 3) && defer.reject();
+
 list = parser.getTrooperArmyList(body);
+if(!list){
+	defer.reject();
+}
 _.each(list, function(trooperId){
+
 promise = that.req.get(that.urlManager.getTrooperArmyMemberDetalis(trooperId));
 promiseList.push(promise);
 });

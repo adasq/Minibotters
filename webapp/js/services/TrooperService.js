@@ -11,7 +11,9 @@ var Trooper = function(RequestHandler){
 	this.chooseSkill = function(data){
 		return RequestHandler.send("chooseSkill", data);	
 	};
-
+	this.generateFamily = function(){
+		return RequestHandler.send("generateFamily", {});	
+	};
 };
 angular
 .module("services")

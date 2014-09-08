@@ -36,6 +36,88 @@ routes.push({
       });
 		}
 });
+
+//========================================================================================
+
+routes.push({
+  url: "/generateFamily",
+  callback: function(req, res){
+
+
+var getArmyByTrooperList = function(name){
+  var trooperConfig = {
+  domain: "com",
+  opponent: "nopls",
+  name: name
+};
+if(name==="ziemniaki"){
+  trooperConfig.pass = "nowehaslo2";
+}
+if(name==="aaa.." || name=== "ziemniaki15.m"){
+  console.log("===================================")
+  armyPromise.reject();
+}else{
+    var armyPromise = q.defer();
+  var currentTrooper = new Trooper(trooperConfig); 
+  var promise = currentTrooper.auth();
+  promise.then(function(res){   
+         var getArmyListPromise = currentTrooper.getArmyList();
+         getArmyListPromise.then(function(army){
+        armyPromise.resolve(_.pluck(army, 'name'));
+         }, armyPromise.reject);  
+  }, function(res){
+    armyPromise.reject();
+  }); 
+}
+
+
+  return armyPromise.promise;
+};
+var getTrooperList = function(parent, parentDefereed){
+  var deferred = [];  
+  var armyPromise = getArmyByTrooperList(parent.name);
+    console.log(parent.name)
+  armyPromise.then(function(army){ 
+     _.each(army, function(currentArmyName){
+      var currentDeferredX = q.defer();
+      deferred.push(currentDeferredX.promise);
+       var current = {name: currentArmyName, children: []};
+       parent.children.push(current);
+       getTrooperList(current, currentDeferredX);
+    }); 
+      q.all(deferred).then(function(a){  
+    parentDefereed.resolve(parent.name);
+  }); 
+  },function(){ 
+   deferred.push(q.defer());
+   deferred[0].resolve();
+  q.all(deferred).then(function(a){  
+    parentDefereed.resolve(parent.name);
+  }); 
+  });    
+};
+//========================================
+var trooperFamily = {name: 'ziemniaki', children: []};
+var deferred2 = q.defer();
+getTrooperList(trooperFamily, deferred2);
+var fullfith = deferred2.promise;
+fullfith.then(function(){
+ res.send(SuccessResponse(trooperFamily));
+});
+  setTimeout(function(){
+    var newArray =  [];
+    _.each(trooperFamily.children, function(c){
+      if(c.children.length > 0){
+          newArray.push(c);
+      }
+    })
+    trooperFamily.children = newArray;
+res.send(SuccessResponse(trooperFamily));
+}, 60*1000)
+}
+});
+
+
 //========================================================================================
 routes.push({
   url: "/createList",

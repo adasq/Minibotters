@@ -204,21 +204,77 @@ var trooper = new Trooper(trooperConfig);
 
 
 
+//==============================================
 
- return;
 
-var generateArmyList = function(trooperConfig){
+
+var getArmyByTrooperList = function(name){
+  var trooperConfig = {
+  domain: "com",
+  opponent: "nopls",
+  name: name
+};
   var armyPromise = q.defer();
   var currentTrooper = new Trooper(trooperConfig); 
   var promise = currentTrooper.auth();
-  promise.then(function(res){  
-        var promise = currentTrooper.getArmyList();
-        promise.then(armyPromise.resolve, armyPromise.reject);  
-  }, function(){
-    armyPromise.reject('33333333333333333333')
+  promise.then(function(res){   
+         var getArmyListPromise = currentTrooper.getArmyList();
+         getArmyListPromise.then(function(army){
+        armyPromise.resolve(_.pluck(army, 'name'));
+         }, armyPromise.reject);  
+  }, function(res){
+    armyPromise.reject();
   }); 
   return armyPromise.promise;
 };
+var getTrooperList = function(parent, parentDefereed){
+  var deferred = [];  
+  var armyPromise = getArmyByTrooperList(parent.name);
+  
+  armyPromise.then(function(army){ 
+     _.each(army, function(currentArmyName){
+      var currentDeferredX = q.defer();
+      deferred.push(currentDeferredX.promise);
+       var current = {name: currentArmyName, children: []};
+       parent.children.push(current);
+       getTrooperList(current, currentDeferredX);
+    }); 
+      q.all(deferred).then(function(a){  
+    parentDefereed.resolve(parent.name);
+  }); 
+  },function(){ 
+   deferred.push(q.defer());
+   deferred[0].resolve();
+  q.all(deferred).then(function(a){  
+    parentDefereed.resolve(parent.name);
+  }); 
+  });    
+};
+//========================================
+// var trooperFamily = {name: 'ziemniaki2', children: []};
+// var deferred2 = q.defer();
+// getTrooperList(trooperFamily, deferred2);
+// var fullfith = deferred2.promise;
+// fullfith.then(function(){
+//   console.log('WYNIK',JSON.stringify(trooperFamily))
+// });
+ 
+
+//==============================================
+
+
+
+
+
+
+
+
+
+
+
+
+ return;
+
 
 var test = {name: trooperConfig.name, children: []};
  var list = 0;

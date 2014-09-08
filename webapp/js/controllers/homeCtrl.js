@@ -1,28 +1,24 @@
 (function(){
-var home = function($scope, $log, $state, $location, $anchorScroll, Trooper, AlertManager, TrooperListModel){
+var home = function($timeout, $scope, $log, $state, $location, $anchorScroll, Trooper, AlertManager, TrooperListModel){
 
 
-var data = {
-	name: "listaNrNiewiem",
-	troopers: [{name: "trooper1", pass: "trooper1pass"}]
-}
-//var list1 = new TrooperListModel(data);
-//list1.save();
+// $timeout(function(){
+// 	$scope.family = { "name": "flare", "children": [
+// { "name": "flare1", "children": []},
+// { "name": "222", "children": []},
+// { "name": "sss", "children": []},
+// { "name": "zzz", "children": []}
+// ]};
 
+// init(root);
 
-// TrooperListModel.getListByName("listaNrNiewiem").then(function(list){
-// 	list.data.name = "listaNrNiewiem2";
-// 	list.save();
-// });
+// },1000);
 
-TrooperListModel.getLists().then(function(lists){
-	$log.log(lists, "S")
+ 
+var promise = Trooper.generateFamily();
+promise.then(function(family){
+	$scope.family = family;
 });
-
-
-Trooper.play({tname: 'ziemniaki2', lname:'asdasd'});
-
-
 };
 angular
 .module("controllers")
